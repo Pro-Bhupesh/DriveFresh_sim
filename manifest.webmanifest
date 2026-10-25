@@ -1,0 +1,25 @@
+{
+  "name": "Toilet Cleaner Simulator – DriveFresh Edition",
+  "short_name": "Toilet Sim",
+  "description": "Race across India's highway outlets and scrub every washroom before the travellers burst in.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#0a4fa3",
+  "theme_color": "#0a4fa3",
+  "lang": "en-IN",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "assets/screenshots/01-intro.png", "sizes": "800x1720", "type": "image/png", "form_factor": "narrow", "label": "Landing page" },
+    { "src": "assets/screenshots/03-room.png", "sizes": "800x1720", "type": "image/png", "form_factor": "narrow", "label": "Scrub the washroom" },
+    { "src": "assets/screenshots/07-award.png", "sizes": "800x1720", "type": "image/png", "form_factor": "narrow", "label": "Awards night" }
+  ]
+}

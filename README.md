@@ -24,9 +24,9 @@
 
 **Toilet Cleaner Simulator** is a fun, fast mobile game built around **DriveFresh**, BPCL's initiative for clean, safe and hygienic washrooms at fuel stations.
 
-You play the **Sales Officer of the Belgaum Retail Territory**. Your job today is to tour five outlets across **Belagavi, Dharwad, Haveri, Gadag and Bagalkot**, read the live DriveFresh odour sensors, and inspect every washroom. If one fails inspection, there's no time to write a letter. You grab the scrubber yourself.
+You play a **Sales Officer** with a suspiciously fast jeep. Your job today is to tour five outlets on tourist routes across India, from the **Manali–Leh highway** and the **White Rann of Kutch** to **Kanha**, **Kaziranga** and the **tea gardens of Munnar**. Read the live DriveFresh odour sensors and inspect every washroom. If one fails inspection, there's no time to write a letter. You grab the scrubber yourself.
 
-Beat the travellers' timer, dodge the dealer's excuses, unlock badges, and climb the leaderboard.
+Beat the travellers' timer, dodge the dealer's excuses, unlock badges, and climb the leaderboard. Score big and you walk the red carpet. Score badly and, well, Raju the Cockroach has an award for you too.
 
 > *"Sir, the cockroach is a pet. Children named him Raju."*
 > — An actual dealer, in the game
@@ -38,11 +38,28 @@ Beat the travellers' timer, dodge the dealer's excuses, unlock badges, and climb
 <div align="center">
 <table>
 <tr>
-<td align="center"><img src="assets/screenshots/01-intro.png" width="190"><br><sub><b>Mission brief</b></sub></td>
-<td align="center"><img src="assets/screenshots/02-map.png" width="190"><br><sub><b>Territory map + odour sensors</b></sub></td>
+<td align="center"><img src="assets/screenshots/01-intro.png" width="190"><br><sub><b>Landing page</b></sub></td>
+<td align="center"><img src="assets/screenshots/02-map.png" width="190"><br><sub><b>All-India map + odour sensors</b></sub></td>
 <td align="center"><img src="assets/screenshots/03-room.png" width="190"><br><sub><b>Scrub, mop, spray</b></sub></td>
 <td align="center"><img src="assets/screenshots/04-howto.png" width="190"><br><sub><b>How-to-play guide</b></sub></td>
 <td align="center"><img src="assets/screenshots/05-final.png" width="190"><br><sub><b>Day report + badges</b></sub></td>
+</tr>
+</table>
+</div>
+
+---
+
+## 🏆 The awards night (and the hall of shame)
+
+Finish the shift with **400+ out of 500** and the curtains open on the **DriveFresh Swachhata Awards**: drumroll, spotlight, fanfare, confetti, a golden trophy and a cheering crowd. Then you give your acceptance speech.
+
+Finish with **under 100** and you're inducted into the **Hall of Shame** instead: sad trombone, falling tomatoes, an applauding audience of cockroaches, and the coveted **Rusty Plunger**.
+
+<div align="center">
+<table>
+<tr>
+<td align="center"><img src="assets/screenshots/07-award.png" width="260"><br><sub><b>400+ · Swachhata Award</b></sub><br><sub><i>"I dedicate this to my mother, who still thinks I sell petrol."</i></sub></td>
+<td align="center"><img src="assets/screenshots/08-shame.png" width="260"><br><sub><b>Under 100 · Rusty Plunger of Shame</b></sub><br><sub><i>"In my defence, the cockroach had seniority."</i></sub></td>
 </tr>
 </table>
 </div>
@@ -56,7 +73,7 @@ Beat the travellers' timer, dodge the dealer's excuses, unlock badges, and climb
 3. **Listen to the dealer's excuse.** Then go in and inspect.
 4. **Choose the right tool and clean.** Rub over the mess, or tap it, before the travellers' timer runs out.
 5. **Get rated.** Stars, before-and-after sensor readings, a dealer stamp from *"DriveFresh certified"* to *"Show-cause notice"*, and a brutally honest traveller review.
-6. **Finish the shift** and share your score card on WhatsApp.
+6. **Finish the shift.** Collect your award (or your plunger), then share your score card on WhatsApp.
 
 ### 🧰 The toolkit
 
@@ -96,7 +113,7 @@ Random events keep every shift different: a lorry jam on the bypass, masala chai
 
 | Rank | What it means |
 |:--|:--|
-| 👑 **Swachhata Samrat** | The TM wants to frame your photo in the territory office. Next to the fire extinguisher. |
+| 👑 **Swachhata Samrat** | The boss wants to frame your photo in the zonal office. Next to the fire extinguisher. |
 | 🥇 **DriveFresh Champion** | Dealers now hide when they see your jeep. That is respect. |
 | 🧹 **Mop Apprentice** | Good effort. The cockroaches are still talking about you. Mostly laughing. |
 | 📚 **Refresher training booked** | Topic: which end of the mop to hold. |
@@ -115,14 +132,17 @@ At the end of every shift the game draws a **score card image** with your score,
 
 ## ✨ Features
 
-- 📱 **Mobile-first web app.** Big thumb-friendly tool tray, full-screen mode, haptics, landscape support and a screen that stays awake while you clean.
+- 📲 **Installable app (PWA).** Add it to your home screen and it opens full screen with its own icon, like a real app. It even works offline.
+- 📱 **Mobile-first.** Big thumb-friendly tool tray, full-screen mode, haptics, landscape support and a screen that stays awake while you clean.
 - 📡 **DriveFresh sensor panel.** Odour index, TVOC, humidity and temperature drop live as you clean.
+- 🗺️ **All-India route map** with five DriveFresh-style tourist routes.
+- 🎭 **Awards ceremony** for 400+ scores, and a **Hall of Shame** for under 100.
 - 🏆 **Live leaderboard** powered by Google Sheets, using each player's best score.
 - 🏅 **8 badges** and **4 ranks** to chase.
 - 😂 **100+ jokes.** Dealer excuses, traveller reviews, wrong-tool roasts, combo streaks and the Sales Officer's inner monologue.
 - 🧭 **Animated how-to-play guide** on the first launch.
 - 🔊 **Sound effects** built in code, with no audio files to download.
-- ⚡ **One HTML file.** No framework, no build step, no install.
+- ⚡ **One HTML file.** No framework, no build step, no app store.
 
 ---
 
@@ -136,6 +156,7 @@ At the end of every shift the game draws a **score card image** with your score,
 | Sounds | Web Audio API |
 | Leaderboard | Google Apps Script web app + Google Sheets |
 | Hosting | GitHub Pages with a custom domain |
+| Install & offline | Web app manifest + service worker (PWA) |
 | Fonts | Bungee + Baloo 2 (Google Fonts) |
 
 ### 📁 Project structure
@@ -143,9 +164,12 @@ At the end of every shift the game draws a **score card image** with your score,
 ```
 DriveFresh_sumilator/
 ├── index.html              # The entire game
+├── manifest.webmanifest    # PWA: app name, icons, colours
+├── sw.js                   # PWA: offline cache (bump VERSION on each update)
 ├── CNAME                   # Custom domain for GitHub Pages
 ├── Code.gs                 # Leaderboard backend (paste into Google Apps Script)
 ├── README.md
+├── icons/                  # App icons (192, 512, maskable, Apple, favicon)
 └── assets/
     ├── banner.png
     └── screenshots/
@@ -153,9 +177,23 @@ DriveFresh_sumilator/
 
 ---
 
+## 📲 Install it like an app
+
+| Phone | How |
+|:--|:--|
+| **Android (Chrome)** | Open [drivefreshsim.in](https://drivefreshsim.in) and tap the yellow **📲 Install app** button, or use **⋮ → Install app** |
+| **iPhone (Safari)** | Open the site, tap **Share ⬆️ → Add to Home Screen** |
+| **Desktop (Chrome / Edge)** | Click the install icon at the right end of the address bar |
+
+Once installed, it opens full screen with no browser bars and works offline. The leaderboard syncs whenever you're back online.
+
+---
+
 ## 🚀 Run it yourself
 
-**Play locally:** download `index.html` and open it in any browser. That's it.
+**Play locally:** download `index.html` and open it in any browser. That's it. (The install and offline features need the site served over HTTPS, which GitHub Pages does for you.)
+
+**Updating the game:** after you change `index.html`, bump `VERSION` at the top of `sw.js` (for example `v1` → `v2`) so installed copies pick up the new version.
 
 **Set up your own leaderboard:**
 
@@ -180,7 +218,12 @@ Scores land in a **Scores** tab with the time, name, score, rank title, toilets 
 
 ### Bhupesh Kumar Bajiya
 
-I made this game to turn DriveFresh, a campaign about something nobody likes talking about, into something people actually *want* to play and share. If a few laughs get more washrooms cleaned on the highway, mission accomplished.
+**Assistant Executive Engineer (Retail), Bharat Petroleum Corporation Limited**
+📍 Karnataka, India
+
+By day, Bhupesh looks after retail fuel outlets: operations, maintenance, safety, statutory compliance and the IoT systems that keep outlets running. He also builds digital tools for the field, from dashboards to web apps.
+
+He made this game to turn DriveFresh, a campaign about something nobody likes talking about, into something people actually *want* to play and share. If a few laughs get more washrooms cleaned on the highway, mission accomplished.
 
 [![GitHub](https://img.shields.io/badge/GitHub-pro--bhupesh-181717?style=flat-square&logo=github)](https://github.com/pro-bhupesh)
 

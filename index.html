@@ -7,6 +7,12 @@
 <meta property="og:title" content="Toilet Cleaner Simulator - DriveFresh Edition">
 <meta property="og:description" content="Can you beat my score? Be fresh, drive fresh!">
 <meta property="og:url" content="https://drivefreshsim.in/">
+<meta property="og:image" content="https://drivefreshsim.in/assets/banner.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Toilet Cleaner Simulator</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#0a4fa3">
@@ -81,7 +87,9 @@ body[data-screen="s-intro"] .hud{display:none}
 .startcard .err{color:var(--bad);font-size:13px;font-weight:700;min-height:0}
 .startcard .err:empty{display:none}
 .startcard .big{width:100%;font-size:20px;padding:12px}
-.hlinks{display:flex;max-width:420px;width:100%}
+.hlinks{display:flex;gap:10px;max-width:420px;width:100%}
+.hlink.install{background:var(--yellow);color:var(--blue-deep);border-color:var(--blue-deep);box-shadow:0 3px 0 var(--blue-deep)}
+.iosHint{margin:0;font-size:13px;background:rgba(255,255,255,.14);border:1px dashed rgba(255,255,255,.5);border-radius:10px;padding:8px 10px;max-width:420px}
 .hlink{flex:1;text-align:center;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.55);border-radius:12px;padding:10px 14px;font-weight:800;font-size:16px}
 .hlink:hover{background:rgba(255,255,255,.12)}
 .leader{margin:0;font-weight:700;font-size:14px;color:var(--yellow)}
@@ -418,7 +426,9 @@ body{-webkit-user-select:none;user-select:none}
         </form>
         <div class="hlinks">
           <button class="hlink" id="howBtn" type="button">❓ How to play</button>
+          <button class="hlink install" id="installBtn" type="button" hidden>📲 Install app</button>
         </div>
+        <p class="iosHint" id="iosHint" hidden>On iPhone: tap <b>Share</b> <span aria-hidden="true">⬆️</span> then <b>Add to Home Screen</b>.</p>
         <p class="leader" id="leaderLine" hidden></p>
       </div>
     </div>
@@ -1434,6 +1444,34 @@ $('pname').value = PLAYER; if(PLAYER) setPlayer(PLAYER);
 $('pname').addEventListener('input', ()=>{ $('nameErr').textContent=''; });
 $('nameForm').addEventListener('submit', e=>{ e.preventDefault(); $('start').click(); });
 function cleanName(v){ return v.replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,30); }
+
+/* ---------- PWA: install + offline ---------- */
+const isStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || (window.matchMedia && matchMedia('(display-mode: fullscreen)').matches) || navigator.standalone === true;
+const PWA_HOSTS = ['drivefreshsim.in','www.drivefreshsim.in','pro-bhupesh.github.io','localhost','127.0.0.1'];
+let deferredInstall = null;
+if('serviceWorker' in navigator && PWA_HOSTS.includes(location.hostname)){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredInstall = e;
+  if(!isStandalone()) $('installBtn').hidden = false;
+});
+window.addEventListener('appinstalled', ()=>{ deferredInstall = null; $('installBtn').hidden = true; $('iosHint').hidden = true; });
+$('installBtn').onclick = async () => {
+  if(deferredInstall){
+    deferredInstall.prompt();
+    try{ const c = await deferredInstall.userChoice; if(c && c.outcome==='accepted') $('installBtn').hidden = true; }catch(e){}
+    deferredInstall = null;
+  } else {
+    $('iosHint').hidden = !$('iosHint').hidden;
+  }
+};
+(function iosInstall(){
+  const ua = navigator.userAgent || '';
+  const ios = /iphone|ipad|ipod/i.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  const safari = /safari/i.test(ua) && !/crios|fxios|edgios/i.test(ua);
+  if(ios && safari && !isStandalone() && PWA_HOSTS.includes(location.hostname)) $('installBtn').hidden = false;
+})();
 
 /* ---------- boot ---------- */
 $('start').onclick = () => {
