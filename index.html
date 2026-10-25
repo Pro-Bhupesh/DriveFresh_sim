@@ -265,7 +265,16 @@ body[data-screen="s-intro"] .hud{display:none}
 @keyframes tStain{0%,30%{opacity:1}45%{opacity:.75}60%{opacity:.45}74%,94%{opacity:0}100%{opacity:1}}
 @keyframes tPop{0%,74%{opacity:0;transform:translate(-50%,-30%)}80%{opacity:1;transform:translate(-50%,-50%)}92%,100%{opacity:0;transform:translate(-50%,-110%)}}
 @keyframes tBub{0%,30%{opacity:0;transform:none}40%{opacity:1}55%{opacity:0;transform:translate(6px,-18px) scale(1.4)}56%{opacity:0;transform:none}62%{opacity:1}74%,100%{opacity:0;transform:translate(-6px,-18px) scale(1.4)}}
-.tutsteps{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+.tutsteps{margin:0;padding-left:20px;display:grid;gap:2px;font-size:14px}
+.tguideh{font-family:var(--display);font-weight:400;color:var(--blue);font-size:16px;margin:4px 0 0}
+.tguide{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tg{border:2px solid var(--grout);border-radius:12px;padding:6px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:#fff;min-width:0}
+.tg .pic{width:100%;height:50px;border-radius:8px;background:#f4f9fc;background-image:linear-gradient(#d9e6ef 1px,transparent 1px),linear-gradient(90deg,#d9e6ef 1px,transparent 1px);background-size:12px 12px;display:grid;place-items:center;overflow:hidden}
+.tg .pic svg{width:58%;max-height:42px}
+.tg .mn{font-weight:800;font-size:12px;line-height:1.1}
+.tg .tl{font-size:10.5px;font-weight:800;background:var(--yellow);border:1.5px solid var(--blue-deep);border-radius:999px;padding:1px 5px;color:var(--blue-deep);letter-spacing:-.01em;white-space:nowrap;max-width:100%}
+.tg .ac{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+.tg .ac.tap{color:var(--good)}
 @media (prefers-reduced-motion:reduce){.tfinger{left:56%;top:54%}.tstain{opacity:.5}}
 /* ceremony */
 .cerstage{position:relative;width:100%;aspect-ratio:16/10;max-height:60dvh;border-radius:14px;overflow:hidden;border:3px solid var(--blue-deep);background:radial-gradient(ellipse at 50% 0%,#3a2a6b,#120c2b 70%);margin-bottom:12px}
@@ -584,11 +593,12 @@ body{-webkit-user-select:none;user-select:none}
       <div class="tfinger">👆</div>
     </div>
     <ol class="tutsteps">
-      <li><b>Tap a tool</b> in the tray. Each mess has its own tool.</li>
-      <li><b>Rub your finger</b> over stains, puddles, cobwebs, mirror smudges and smell clouds until they vanish.</li>
-      <li><b>Just tap</b> litter, cockroaches, the empty soap dispenser and the fused bulb.</li>
-      <li>Beat the travellers' timer. Clean fast for bonus points and <b>badges</b>.</li>
+      <li><b>Tap a tool</b> in the tray.</li>
+      <li><b>Rub</b> or <b>tap</b> the mess, as shown on the cards below.</li>
+      <li>Beat the travellers' timer for bonus points and <b>badges</b>.</li>
     </ol>
+    <h3 class="tguideh">What fixes what</h3>
+    <div class="tguide" id="tGuide"></div>
     <button class="big" id="tutGo" type="button">Got it, let's clean!</button>
   </div>
 </div>
@@ -1040,7 +1050,18 @@ function startRoom(id){
   if(!tutSeen()){ room.active = false; const r = room; showTut(()=>{ if(room===r){ r.active = true; say('Go go go!'); } }); }
 }
 function tutSeen(){ try{ return localStorage.getItem('dfsim-tut')==='1'; }catch(e){ return !!tutSeen.mem; } }
+const GUIDE = [
+  ['stain','Stain'],['puddle','Puddle'],['litter','Litter'],
+  ['cobweb','Cobweb'],['smudge','Mirror smudge'],['smell','Smell cloud'],
+  ['roach','Cockroach'],['soap','Empty soap'],['bulb','Fused bulb'],
+];
+function buildGuide(){
+  const g=$('tGuide'); if(g.dataset.built) return; g.dataset.built='1';
+  g.innerHTML = GUIDE.map(([type,label])=>{ const T=TYPES[type], tool=TOOLS[T.tool], tap=T.mode==='tap';
+    return `<div class="tg"><div class="pic">${issueSVG(type).replace(/style="transform:rotate\([^)]*\)"/,'')}</div><span class="mn">${label}</span><span class="tl">${tool.icon} ${tool.name}</span><span class="ac${tap?' tap':''}">${tap?'👆 Tap':'👋 Rub'}</span></div>`; }).join('');
+}
 function showTut(after){
+  buildGuide();
   const t=$('tut'); t.hidden=false; setTimeout(()=>$('tutGo').focus(),50);
   $('tutGo').onclick = () => { t.hidden=true; tutSeen.mem=true; try{ localStorage.setItem('dfsim-tut','1'); }catch(e){} if(after) after(); };
 }
