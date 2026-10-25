@@ -1,0 +1,928 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Toilet Cleaner Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#0a4fa3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Toilet Sim">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Baloo+2:wght@400;600;800&display=swap">
+<style>
+/* Layout: a bathroom-tile wall as the page; game screens sit on it like enamel signboards */
+:root{
+  --wall:#e3edf4; --grout:#cddde8;
+  --paper:#ffffff; --ink:#10263f; --muted:#5b6f84;
+  --blue:#0a4fa3; --blue-deep:#06305f; --yellow:#ffd31a;
+  --good:#16a35f; --warn:#e8961a; --bad:#de4336;
+  --land:#e2f0e6; --road:#9aa7b3;
+  --display:"Bungee", "Impact", system-ui, sans-serif;
+  --body:"Baloo 2", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--wall);
+  background-image:linear-gradient(var(--grout) 1px,transparent 1px),linear-gradient(90deg,var(--grout) 1px,transparent 1px);
+  background-size:48px 48px;
+  color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.45;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:14px 28px;
+}
+.app{max-width:1020px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+button{font-family:var(--body);font-size:16px;cursor:pointer;color:var(--ink)}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+/* HUD */
+.hud{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-family:var(--display);font-size:clamp(18px,3.4vw,28px);line-height:1;color:var(--blue);text-shadow:2px 2px 0 var(--yellow);margin:0}
+.logo small{display:block;font-family:var(--body);font-weight:600;font-size:13px;color:var(--muted);text-shadow:none;letter-spacing:.04em;margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--paper);border:2px solid var(--blue);border-radius:999px;padding:4px 12px;font-weight:800;font-variant-numeric:tabular-nums;display:flex;gap:6px;align-items:center}
+.chip span{font-weight:600;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.chip.btn{cursor:pointer}
+
+.screen{background:var(--paper);border:3px solid var(--blue);border-radius:18px;box-shadow:0 6px 0 var(--blue-deep);padding:clamp(14px,3vw,26px);min-width:0}
+h2{font-family:var(--display);font-weight:400;color:var(--blue);margin:0 0 8px;font-size:clamp(20px,3.6vw,30px);line-height:1.1;text-wrap:balance}
+p{margin:0 0 10px;max-width:65ch}
+.eyebrow{font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.big{background:var(--yellow);border:3px solid var(--blue-deep);border-radius:12px;padding:10px 20px;font-weight:800;font-size:18px;box-shadow:0 4px 0 var(--blue-deep);transition:transform .08s}
+.big:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue-deep)}
+.ghost{background:var(--paper);border:2px solid var(--blue);border-radius:10px;padding:8px 14px;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* Intro */
+.intro{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:center}
+.intro ol{margin:0 0 14px;padding-left:20px;display:grid;gap:4px}
+.badge{display:inline-block;background:var(--blue);color:var(--yellow);font-family:var(--display);padding:4px 10px;border-radius:8px;font-size:14px;transform:rotate(-2deg)}
+.intro-art{background:var(--blue);border-radius:14px;padding:18px;color:#fff;text-align:center}
+.intro-art .t{font-family:var(--display);color:var(--yellow);font-size:30px;line-height:1}
+.intro-art .s{opacity:.9;font-size:14px;margin-top:6px}
+.intro-art svg{width:100%;max-width:240px;margin:12px auto 0;display:block}
+
+/* Map */
+.mapgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.mapbox{border:2px solid var(--blue);border-radius:12px;overflow:hidden;min-width:0;background:var(--land)}
+.mapsvg{display:block;width:100%;height:auto}
+.mapsvg .river{fill:none;stroke:#7fbfe6;stroke-width:1.4;stroke-linecap:round}
+.mapsvg .road{stroke:var(--road);stroke-width:.9;stroke-linecap:round}
+.mapsvg .nh{stroke:#7a8794;stroke-width:1.6}
+.mapsvg .dist{font-family:var(--display);font-size:4.2px;fill:#0a4fa3;opacity:.13}
+.mapsvg .lbl{font-family:var(--body);font-weight:800;font-size:2.5px;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:.7px}
+.mapsvg .pin{cursor:pointer}
+.mapsvg .pin:focus{outline:none}
+.mapsvg .pin:focus-visible circle.core,.mapsvg .pin.sel circle.core{stroke:var(--bad);stroke-width:.9}
+.pulse{animation:pulse 1.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{from{opacity:.9;transform:scale(.6)}to{opacity:0;transform:scale(1.8)}}
+.list{display:flex;flex-direction:column;gap:8px;min-width:0;max-height:520px;overflow:auto;padding-right:4px}
+.card{border:2px solid var(--grout);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.card.sel{border-color:var(--blue);background:#f2f7fd}
+.card.done{opacity:.7}
+.card h3{margin:0;font-size:16px;line-height:1.2}
+.card .meta{font-size:13px;color:var(--muted)}
+.odour{font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap;font-variant-numeric:tabular-nums}
+.card .go{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
+.card .go button{background:var(--yellow);border:2px solid var(--blue-deep);border-radius:8px;padding:4px 12px;font-weight:800}
+.card .go button:disabled{background:#e8edf1;border-color:#b9c4cd;color:#7d8b97;cursor:not-allowed}
+.banner{background:#fff4d1;border:2px dashed var(--warn);border-radius:10px;padding:8px 12px;font-weight:600;margin-bottom:10px}
+
+/* Event + arrival */
+.center{max-width:620px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.center p{margin:0}
+.evicon{font-size:54px;line-height:1}
+.sign{background:var(--blue);border:4px solid var(--yellow);border-radius:10px;padding:10px 22px;color:var(--yellow);font-family:var(--display);font-size:clamp(18px,3.5vw,26px);line-height:1.1}
+.sign small{display:block;font-family:var(--body);color:#fff;font-size:13px;font-weight:600;margin-top:4px}
+.bubble{background:#f2f7fd;border:2px solid var(--blue);border-radius:16px;padding:12px 16px;position:relative;max-width:480px;text-align:left}
+.bubble b{display:block;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* Room */
+.roomtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.roomtop h2{margin:0}
+.timer{flex:1 1 220px;max-width:340px}
+.timer .bar{height:14px;border-radius:999px;background:#e5ebf0;border:2px solid var(--blue-deep);overflow:hidden}
+.timer .fill{height:100%;background:var(--good);width:100%;transition:width .1s linear,background .3s}
+.timer .lbl2{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.roomgrid{display:grid;grid-template-columns:1fr 220px;gap:14px}
+.stage{position:relative;aspect-ratio:16/10;width:100%;max-width:100%;border-radius:12px;overflow:hidden;border:3px solid var(--blue-deep);touch-action:none;user-select:none;-webkit-user-select:none;background:#f4f9fc}
+@media (pointer:fine){.stage{cursor:none}}
+.roomsvg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fan{transform-box:fill-box;transform-origin:center;animation:spin 1.1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.issue{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center;min-width:30px;min-height:30px}
+.issue svg{width:100%;height:auto;display:block;pointer-events:none}
+.issue[data-type="smell"] svg{animation:waft 2.2s ease-in-out infinite}
+.issue[data-type="soap"] svg,.issue[data-type="bulb"] svg{animation:throb 1s ease-in-out infinite}
+@keyframes waft{50%{transform:translateY(-8%) scale(1.05)}}
+@keyframes throb{50%{transform:scale(1.12)}}
+.issue.gone{transition:opacity .35s,transform .35s;opacity:0!important;transform:translate(-50%,-50%) scale(1.5)!important;pointer-events:none}
+.dark{position:absolute;inset:0;background:radial-gradient(circle at 50% 8%,rgba(10,20,40,.25),rgba(10,20,40,.62) 60%);pointer-events:none;transition:opacity .5s}
+.say{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+.say.show{opacity:1}
+.cursor{position:absolute;font-size:30px;pointer-events:none;transform:translate(-30%,-70%);filter:drop-shadow(1px 2px 1px rgba(0,0,0,.3));display:none}
+.foam{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#cfe9f7);border:1px solid #a9d3ea;pointer-events:none;animation:foam .7s ease-out forwards}
+@keyframes foam{to{transform:translate(var(--dx),-26px) scale(1.6);opacity:0}}
+.pop{position:absolute;font-family:var(--display);color:var(--good);font-size:18px;pointer-events:none;text-shadow:2px 2px 0 #fff;animation:rise .9s ease-out forwards;transform:translate(-50%,-50%)}
+@keyframes rise{to{transform:translate(-50%,-180%);opacity:0}}
+.side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.sensor{border:2px solid var(--grout);border-radius:12px;padding:10px}
+.sensor h4{margin:0 0 6px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.srow{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin-bottom:6px;font-size:14px}
+.srow b{font-variant-numeric:tabular-nums}
+.srow .m{grid-column:1/-1;height:6px;border-radius:9px;background:#e7edf2;overflow:hidden}
+.srow .m i{display:block;height:100%;border-radius:9px;transition:width .3s,background .3s}
+.left{font-weight:700;font-size:14px}
+.tools{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:12px}
+.tool{background:var(--paper);border:2px solid var(--grout);border-radius:12px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:0;position:relative;min-width:0}
+.tool .i{font-size:26px;line-height:1.2}
+.tool .n{font-size:12px;font-weight:700;line-height:1.1;text-align:center}
+.tool kbd{position:absolute;top:3px;left:5px;font-size:10px;color:var(--muted);font-family:var(--body)}
+.tool.on{background:var(--yellow);border-color:var(--blue-deep);box-shadow:0 3px 0 var(--blue-deep)}
+
+/* Result + final */
+.stars{font-size:44px;letter-spacing:6px;color:var(--yellow);text-shadow:0 2px 0 var(--blue-deep)}
+.stars .off{color:#dbe3ea;text-shadow:none}
+.stamp{font-family:var(--display);font-size:18px;padding:6px 14px;border:3px solid;border-radius:8px;transform:rotate(-4deg);display:inline-block}
+.compare{width:100%;max-width:420px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.compare th,.compare td{padding:6px 8px;border-bottom:1px solid var(--grout);text-align:right}
+.compare th:first-child,.compare td:first-child{text-align:left}
+.quote{font-style:italic;max-width:480px}
+.tablewrap{overflow-x:auto;width:100%}
+.report{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:420px}
+.report th,.report td{padding:8px;border-bottom:1px solid var(--grout);text-align:left}
+.report td.n,.report th.n{text-align:right}
+.scorebig{background:var(--blue);color:#fff;border-radius:16px;padding:14px 26px;border:4px solid var(--yellow);min-width:240px}
+.scorebig .eyebrow{color:#cfe2f7}
+.scorebig .num{font-family:var(--display);font-size:clamp(48px,12vw,72px);line-height:1;color:var(--yellow);font-variant-numeric:tabular-nums}
+.scorebig .of{font-weight:700;font-size:15px}
+.scorebig .bonus{font-size:13px;opacity:.85;margin-top:2px}
+.share{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
+.wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#08331a;text-decoration:none;border:3px solid #0b6b35;box-shadow:0 4px 0 #0b6b35}
+.wa svg{width:22px;height:22px}
+@media (max-width:760px){.share>*{flex:1 1 100%}}
+.rank{font-family:var(--display);font-size:clamp(24px,5vw,40px);color:var(--blue);text-shadow:3px 3px 0 var(--yellow);line-height:1.05}
+
+/* ---- app feel ---- */
+html,body{overscroll-behavior:none}
+button,.tool,.pin{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{-webkit-user-select:none;user-select:none}
+.stage{width:min(100%, calc((100dvh - 230px) * 1.6));margin:0 auto}
+.combo{font-family:var(--display);font-size:14px;color:var(--bad);min-height:1.2em}
+.think{font-size:13px;color:var(--muted);font-style:italic;margin-top:6px;min-height:2.6em}
+
+@media (max-width:760px){
+  body{padding-block:8px 12px;font-size:15px}
+  .app{gap:8px}
+  .hud{gap:6px}
+  .logo{font-size:17px}
+  .logo small{display:none}
+  .chip{padding:2px 9px;font-size:14px;border-width:2px}
+  .chip span{font-size:11px}
+  .screen{padding:12px;border-width:2px;border-radius:14px;box-shadow:0 4px 0 var(--blue-deep)}
+  .intro,.mapgrid,.roomgrid{grid-template-columns:1fr}
+  .intro-art{order:-1;padding:12px}
+  .intro-art svg{max-width:150px;margin-top:6px}
+  .intro-art .t{font-size:24px}
+  .list{max-height:none}
+  .card .go button{padding:8px 16px;font-size:16px}
+  .big{width:100%;padding:14px 20px}
+  .roomtop{margin-bottom:6px;gap:6px}
+  .roomtop h2{font-size:18px}
+  .timer{flex:1 1 100%;max-width:none}
+  .roomgrid{gap:8px}
+  .side{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+  .sensor{padding:8px}
+  .sensor h4{font-size:11px;margin-bottom:4px}
+  #sens{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+  .srow{font-size:12px;margin-bottom:3px}
+  .left{font-size:13px}
+  #hint{display:none}
+  .tools{grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;bottom:0;z-index:5;background:var(--paper);margin:8px -12px -12px;padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:2px solid var(--grout);border-radius:0 0 12px 12px}
+  .tool{min-height:58px;padding:4px 2px}
+  .tool .i{font-size:24px}
+  .tool kbd{display:none}
+  .say{font-size:12px;white-space:normal;text-align:center;border-radius:12px;width:max-content;max-width:90%}
+  .stars{font-size:38px}
+}
+@media (max-height:520px) and (orientation:landscape){
+  .roomgrid{grid-template-columns:1fr 200px}
+  .stage{width:min(100%, calc((100dvh - 120px) * 1.6))}
+  .tools{grid-template-columns:repeat(8,1fr);position:static;margin:6px 0 0;padding:0;border:0}
+  .side{display:flex;flex-direction:column}
+  #sens{display:block}
+  .logo small{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="hud">
+    <h1 class="logo">Toilet Cleaner Simulator<small>DriveFresh Edition · Belgaum Retail Territory</small></h1>
+    <div class="chips">
+      <div class="chip"><span>Shift</span><b id="clock">9:00 AM</b></div>
+      <div class="chip"><span>Fresh pts</span><b id="pts">0</b></div>
+      <button class="chip btn" id="mute" aria-pressed="false">Sound on</button>
+      <button class="chip btn" id="fs">Full screen</button>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <section class="screen" id="s-intro">
+    <div class="intro">
+      <div>
+        <div class="eyebrow">Mission brief</div>
+        <h2>Sahab, the washrooms need you.</h2>
+        <p>You are the Sales Officer. Under <b>DriveFresh</b>, every BPCL outlet on your route promises a clean, safe, hygienic washroom. Today you tour Belagavi, Dharwad, Haveri, Gadag and Bagalkot. If a toilet fails inspection, there is no time to write a letter. Roll up your sleeves.</p>
+        <ol>
+          <li>Pick outlets on the map. The DriveFresh <b>odour sensor</b> tells you which ones stink.</li>
+          <li>Driving costs shift time. Your day ends at 6 PM.</li>
+          <li>In the washroom, pick the right tool and <b>scrub, mop and tap</b> every problem before the travellers burst in.</li>
+          <li>Clean fast for bonus points. Keys 1 to 8 switch tools.</li>
+        </ol>
+        <div class="row"><button class="big" id="start">Start shift</button><span class="badge">Be fresh, drive fresh</span></div>
+      </div>
+      <div class="intro-art">
+        <div class="t">DRIVE FRESH</div>
+        <div class="s">5 toilets · 1 Sales Officer · 0 excuses</div>
+        <svg viewBox="0 0 120 90" aria-hidden="true">
+          <rect x="10" y="60" width="100" height="6" rx="3" fill="#06305f"/>
+          <path d="M40 30 Q40 58 52 60 H68 Q80 58 80 30Z" fill="#fff"/>
+          <ellipse cx="60" cy="30" rx="21" ry="6" fill="#e9f2f8" stroke="#9fb1bf"/>
+          <rect x="46" y="8" width="28" height="16" rx="3" fill="#fff"/>
+          <g fill="#ffd31a"><path d="M20 20 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/><path d="M95 12 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/><path d="M100 44 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6z"/></g>
+          <rect x="84" y="26" width="4" height="34" rx="2" fill="#ffd31a" transform="rotate(20 86 43)"/>
+          <ellipse cx="93" cy="58" rx="7" ry="4" fill="#ffd31a" transform="rotate(20 93 58)"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <section class="screen" id="s-map" hidden>
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <div><div class="eyebrow">Territory map</div><h2 style="margin:0">Where to next, Sahab?</h2></div>
+      <button class="ghost" id="endday">End shift</button>
+    </div>
+    <div id="mapBanner"></div>
+    <div class="mapgrid">
+      <div class="mapbox" id="mapbox"></div>
+      <div class="list" id="list"></div>
+    </div>
+  </section>
+
+  <!-- EVENT -->
+  <section class="screen" id="s-event" hidden>
+    <div class="center">
+      <div class="eyebrow">On the road</div>
+      <div class="evicon" id="evIcon"></div>
+      <h2 id="evTitle"></h2>
+      <p id="evText"></p>
+      <p id="evQuip" class="quote" style="color:var(--muted)"></p>
+      <button class="big" id="evGo">Keep driving</button>
+    </div>
+  </section>
+
+  <!-- ARRIVAL -->
+  <section class="screen" id="s-arrive" hidden>
+    <div class="center">
+      <div class="eyebrow">You have arrived</div>
+      <div class="sign" id="arSign"></div>
+      <div class="bubble"><b>Dealer manager</b><span id="arLine"></span></div>
+      <p id="arNote" style="color:var(--muted)"></p>
+      <button class="big" id="arGo">Inspect the washroom</button>
+    </div>
+  </section>
+
+  <!-- ROOM -->
+  <section class="screen" id="s-room" hidden>
+    <div class="roomtop">
+      <div><div class="eyebrow" id="rmTag"></div><h2 id="rmName"></h2></div>
+      <div class="timer"><div class="lbl2"><span>Travellers waiting</span><span id="tLeft">40s</span></div><div class="bar"><div class="fill" id="tFill"></div></div></div>
+    </div>
+    <div class="roomgrid">
+      <div style="min-width:0">
+        <div class="stage" id="stage"></div>
+        <div class="tools" id="tools"></div>
+      </div>
+      <div class="side">
+        <div class="sensor">
+          <h4>DriveFresh live sensor</h4>
+          <div id="sens"></div>
+        </div>
+        <div class="sensor">
+          <h4>Inspection</h4>
+          <div class="left" id="leftCount"></div>
+          <div class="combo" id="combo"></div>
+          <div class="think" id="think"></div>
+          <p style="font-size:13px;color:var(--muted);margin:6px 0 0" id="hint">Pick a tool, then rub over the mess. Tap litter, bulbs, soap and cockroaches.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result" hidden>
+    <div class="center">
+      <div class="eyebrow" id="reName"></div>
+      <div class="stars" id="reStars"></div>
+      <div id="reStamp"></div>
+      <h2 id="reScore"></h2>
+      <table class="compare" id="reTable"></table>
+      <p class="quote" id="reQuote"></p>
+      <button class="big" id="reGo">Back to the map</button>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="screen" id="s-final" hidden>
+    <div class="center" style="max-width:720px">
+      <div class="eyebrow">DriveFresh day report</div>
+      <div class="scorebig"><div class="eyebrow">Overall score</div><div class="num" id="fScore">0</div><div class="of" id="fOf"></div><div class="bonus" id="fBonus"></div></div>
+      <div class="rank" id="fRank"></div>
+      <p class="quote" id="fLine"></p>
+      <p id="fSum"></p>
+      <div class="tablewrap"><table class="report" id="fTable"></table></div>
+      <div class="share">
+        <a class="big wa" id="wa" href="https://wa.me/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>Share on WhatsApp</a>
+        <button class="ghost" id="copyRes">Copy score</button>
+        <button class="big" id="again">Play again</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+const DAY = 540, CLEAN_MIN = 40;
+const GAME_URL = 'https://claude.ai/artifact/VyzRisGqDq41GkKds9jjcA';
+const OUTLETS = [
+  {id:'kittur',  name:'Kittur Rani Fuels',       town:'Belagavi', tag:'NH-48, Kittur',        x:20, y:24},
+  {id:'badami',  name:'Badami Caves Fuel Stop',  town:'Bagalkot', tag:'Badami heritage route',x:68, y:29},
+  {id:'peda',    name:'Peda Nagari Petroleum',   town:'Dharwad',  tag:'Dharwad city',         x:29, y:40},
+  {id:'lakkundi',name:'Lakkundi Heritage Fuels', town:'Gadag',    tag:'Lakkundi temples route',x:73, y:47},
+  {id:'elakki',  name:'Elakki Highway Fuels',    town:'Haveri',   tag:'NH-48, Haveri',        x:50, y:65},
+];
+const OFFICE = {id:'office', name:'Territory Office', x:38, y:44};
+const ROADS = [['kittur','office',1],['office','elakki',1],['kittur','badami'],['office','peda'],['office','lakkundi'],['lakkundi','badami'],['elakki','lakkundi'],['peda','kittur']];
+const byId = id => id==='office'?OFFICE:OUTLETS.find(o=>o.id===id);
+
+const TOOLS = {
+  scrub:{name:'Scrubber',icon:'🧽'}, mop:{name:'Mop',icon:'🧹'}, bin:{name:'Bin bag',icon:'🗑️'}, duster:{name:'Duster',icon:'🪶'},
+  spray:{name:'Disinfectant',icon:'🧴'}, fresh:{name:'Freshener',icon:'🌸'}, soap:{name:'Soap refill',icon:'🧼'}, bulb:{name:'New bulb',icon:'💡'}
+};
+const TOOL_KEYS = Object.keys(TOOLS);
+const TYPES = {
+  stain: {tool:'scrub', mode:'scrub', w:11, odour:8, hint:[
+    'That stain is laughing at you. Use the Scrubber.',
+    'This stain has been here since BS-IV. Scrubber, please.',
+    'You cannot negotiate with a stain, Sahab. Scrubber!',
+    'That stain has a PAN card by now. Scrub it.']},
+  puddle:{tool:'mop', mode:'scrub', w:17, odour:3, hum:7, hint:[
+    'Puddles need the Mop, Sahab.',
+    'Is that water? Let us hope it is water. Mop!',
+    'Nobody wants to skate in a washroom. Mop it.',
+    'This puddle has its own fish now. Grab the Mop.']},
+  litter:{tool:'bin', mode:'tap', w:7, odour:4, hint:[
+    'Tap litter with the Bin bag.',
+    'The chips packet is not a decoration. Bin bag!',
+    'Someone left their whole lunch here. Bin bag.',
+    'Swachh Bharat is watching. Bin bag, please.']},
+  cobweb:{tool:'duster', mode:'scrub', w:13, odour:1, hint:[
+    'Cobwebs come down with the Duster.',
+    'The spider has applied for a dealership. Duster!',
+    'That web is older than the outlet licence. Duster.',
+    'Spider-Man is not coming. Use the Duster.']},
+  smudge:{tool:'spray', mode:'scrub', w:10, odour:1, hint:[
+    'Mirror smudge: spray Disinfectant and rub.',
+    'Travellers cannot fix their hair in a foggy mirror. Spray it.',
+    'Mirror mirror on the wall, who forgot to clean you at all? Spray!']},
+  smell: {tool:'fresh', mode:'scrub', w:13, odour:16, hint:[
+    'That smell needs the Freshener. Wave it around.',
+    'The odour sensor is crying. Freshener, quick!',
+    'Even the IoT box is holding its breath. Freshener!',
+    'That smell can be seen from Google Maps. Freshener.']},
+  soap:  {tool:'soap', mode:'tap', w:9, odour:1, hint:[
+    'Dispenser is empty. Tap with Soap refill.',
+    'No soap? Travellers will wash hands with hope. Refill it.',
+    'The soap dispenser is on a fast today. Feed it.']},
+  bulb:  {tool:'bulb', mode:'tap', w:9, odour:0, hint:[
+    'Fused bulb. Tap it with a New bulb.',
+    'Cleaning in the dark is called guessing. New bulb!',
+    'Even the cockroaches need a torch here. Fix the bulb.']},
+  roach: {tool:'spray', mode:'tap', w:6, odour:5, hint:[
+    'Cockroach! Disinfectant, quick!',
+    'He is not a customer, he is a squatter. Spray him!',
+    'That cockroach survived two monsoons. Disinfectant!',
+    'He is running towards the dealer office. Spray!']},
+};
+const NO_TOOL = [
+  'Pick a tool first, Sahab.',
+  'Bare hands? Sahab, you are a Sales Officer, not a superhero.',
+  'Choose a tool from the tray below.',
+  'Gloves on, tool in hand. Pick one first.'];
+const DEALER_DIRTY = [
+  'Sir, the cleaning boy went for chai at 9 AM. Still not back.',
+  'Sir, it was spotless five minutes ago. A tourist bus just left, I swear.',
+  'Sir, the water motor is not working since Diwali.',
+  'Sir, the mop has gone on leave today.',
+  'Sir, toilet is clean only. Small-small issues, that is all.',
+  'Sir, the DriveFresh checklist is filled. Cleaning is pending.',
+  'Sir, Rahu kaal is going on. We start cleaning after 4.',
+  'Sir, the cleaner\'s cousin\'s marriage is today. Entire staff has gone.',
+  'Sir, this is the old toilet. The new toilet is also like this.',
+  'Sir, smell is coming from the highway, not from our toilet.',
+  'Sir, we were cleaning only. Then you came. Bad timing, sir.',
+  'Sir, Harpic stock is in the pipeline. Like the pipeline project.',
+  'Sir, that stain is not dirt. It is a design. Italian tiles, sir.',
+  'Sir, the cockroach is a pet. Children named him Raju.',
+  'Sir, the bulb is fused because of PNGRB inspection. Too much stress.',
+  'Sir, sensor is showing wrong reading. Sensor has cold, sir.',
+  'Sir, last time you came everything was clean. Today is a special day.',
+  'Sir, I personally clean it. With my eyes, I check daily.',
+];
+const DEALER_CLEAN = [
+  'Sir, DriveFresh checklist signed every two hours. Please see for yourself.',
+  'Sir, we clean after every bus. Customers are giving five stars.',
+  'Sir, you can eat food on this floor. Please don\'t, but you can.',
+  'Sir, our toilet smells better than my house. My wife is upset.',
+  'Sir, the cleaner has a mop in one hand and DriveFresh in his heart.',
+];
+const ARRIVE_NOTE = [
+  'A family from the {r} traffic is waiting outside the washroom.',
+  'A tourist bus on the {r} just pulled in. 42 passengers. 1 washroom.',
+  'A truck driver is doing a very urgent dance near the door.',
+  'A school trip just arrived. Teacher is counting heads. Kids are counting seconds.',
+  'A biker gang on the {r} is waiting. Politely, for now.',
+  'A wedding party just stopped. The groom is waiting. The baraat is waiting.',
+];
+const TRAVELLER = [
+  ['I held my breath for two whole minutes. Next time I will wait till the next town.',
+   'I have seen cleaner toilets at a cricket stadium after the final.',
+   'My child asked if this is a haunted house.',
+   'I went in a man. I came out a philosopher.',
+   'Five stars for the petrol. Minus five for the toilet.'],
+  ['Hmm. Usable in an emergency. Only in an emergency.',
+   'The mirror is clean. The rest of the room has trust issues.',
+   'Not bad, not good. Very government, actually.',
+   'Soap was there. Courage was required.'],
+  ['Decent! Soap smells nice and the floor is dry.',
+   'My mother-in-law found nothing to complain about. Historic.',
+   'Clean enough that I stopped holding my nose. Progress.',
+   'Good job. I only checked under the seat twice.'],
+  ['Cleaner than my own bathroom. We will fill up here on the way back!',
+   'I am posting a review. And a selfie. In the washroom. Sorry.',
+   'Is this a five-star hotel? Why is there a petrol pump outside?',
+   'I came for petrol, I stayed for the toilet. Full tank, sir!',
+   'Better than the airport. And no ₹300 water bottle.'],
+];
+const STAMPS = [['Show-cause notice to dealer','var(--bad)'],['Warning letter issued','var(--warn)'],['DriveFresh approved','var(--good)'],['DriveFresh certified','var(--good)']];
+const POPS = ['Fresh!','Shiny!','Gone!','Sparkling!','Swachh!','Bye-bye!','Chamak!','Dhamaka!','Ekdum fresh!','Zabardast!','Kaboom!','Next!'];
+const COMBOS = ['','','Double clean!','Triple shine!','Mop-tastic!','Swachh streak!','Unstoppable!','Legend of the loo!'];
+const THINK_START = [
+  'Note to self: ask HR if this counts as fieldwork.',
+  'MBA did not prepare me for this.',
+  'My mother thinks I sell petrol. Let her keep believing.',
+  'Deep breath... no, wait. Shallow breath.',
+  'Someday they will make a movie about this. Toilet: Ek Sales Katha.',
+  'Target achievement: volume 82%, toilets 0%. Let us fix one.',
+  'The TM asked for photos. With before and after. Mostly before.',
+  'Gloves: yes. Mask: yes. Dignity: in the jeep.',
+];
+const THINK_MID = [
+  'This is fine. Everything is fine.',
+  'I could be doing the HSD report right now. This is more fun.',
+  'If the TM calls now, I am not picking up.',
+  'Halfway there. Livin\' on a prayer.',
+  'My forearms are getting stronger than my sales figures.',
+  'Somebody give the cleaner a raise. And me.',
+];
+const KNOCKS = [
+  'Knock knock! "Bhaiya, how long?"',
+  'Knock knock! "Uncle, is it free? It is VERY urgent!"',
+  '"Sir, the bus will leave in 2 minutes!"',
+  '"Bhai saab, I am counting! 100... 99... 98..."',
+  'Someone is singing loudly outside to stay calm.',
+  '"Hello? Is this the DriveFresh toilet or the drive-slow toilet?"',
+];
+const LOW_TIME = [
+  'Hurry! Someone is doing the urgent dance outside!',
+  'The door handle is rattling. Faster!',
+  '10 seconds! The baraat is getting restless!',
+  'A kid is crying outside. Not from sadness.',
+];
+const EV_QUIPS = [
+  'The SO\'s jeep sighs dramatically.',
+  'Your phone has 47 unread messages. All of them say "Sir, update?"',
+  'The driver turns up the radio. It is playing "Kaanta Laga".',
+  'A cow on the road gives you a look of judgement.',
+  'Somewhere, a dealer is quickly hiding a mop.',
+];
+const RANK_LINES = {
+  'Swachhata Samrat':'The TM wants to frame your photo in the territory office. Next to the fire extinguisher.',
+  'DriveFresh Champion':'Dealers now hide when they see your jeep. That is respect.',
+  'Mop Apprentice':'Good effort. The cockroaches are still talking about you. Mostly laughing.',
+  'Refresher training booked':'HR has booked a 3-day refresher at Mumbai HQ. Topic: Which end of the mop to hold.',
+};
+
+const $ = id => document.getElementById(id);
+const rnd = (a,b) => a + Math.random()*(b-a);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const dist = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+const travelMin = (a,b) => Math.round(8 + dist(a,b)*1.8);
+const fmt = m => { const t = 9*60 + Math.round(m); let h = Math.floor(t/60), mm = t%60; const ap = h>=12?'PM':'AM'; h = h>12?h-12:h; return h+':'+String(mm).padStart(2,'0')+' '+ap; };
+const odourColor = v => v<25?'var(--good)':v<55?'var(--warn)':'var(--bad)';
+
+/* ---------- sound ---------- */
+let ac=null, muted=false, lastSq=0;
+function tone(f,d,type,v){ if(muted) return; try{ ac = ac || new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(), g=ac.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(v||.05, ac.currentTime); g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime+d); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime+d);}catch(e){} }
+const ding = () => { tone(1046,.12,'sine',.06); setTimeout(()=>tone(1568,.18,'sine',.05),90); };
+const squeak = () => { const n=performance.now(); if(n-lastSq<90) return; lastSq=n; tone(900+Math.random()*500,.05,'triangle',.02); };
+const buzz = () => tone(150,.22,'square',.03);
+function buzzPhone(p){ if(muted) return; try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+let wake=null;
+async function keepAwake(){ try{ if(!wake && navigator.wakeLock){ wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release',()=>wake=null); } }catch(e){} }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && room) keepAwake(); });
+$('fs').onclick = async () => {
+  try{
+    if(document.fullscreenElement){ await document.exitFullscreen(); }
+    else { await (document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : Promise.reject()); }
+  }catch(e){ $('fs').textContent = 'Not available'; setTimeout(()=>{$('fs').textContent='Full screen';},1500); }
+};
+document.addEventListener('fullscreenchange',()=>{ $('fs').textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen'; });
+document.addEventListener('contextmenu', e=>{ if(e.target.closest('.stage')) e.preventDefault(); });
+$('mute').onclick = () => { muted=!muted; $('mute').textContent = muted?'Sound off':'Sound on'; $('mute').setAttribute('aria-pressed', String(muted)); };
+
+/* ---------- state ---------- */
+let state = null, room = null;
+function newState(){
+  const lv = shuffle([0,1,2,2,3]);
+  const out = {};
+  OUTLETS.forEach((o,i)=>{ out[o.id] = {level:lv[i], odour: Math.max(3, Math.min(97, Math.round([9,34,60,84][lv[i]] + rnd(-6,6))))}; });
+  return {started:true, time:0, pos:{x:OFFICE.x,y:OFFICE.y}, at:'office', total:0, visited:{}, out, mods:{chai:0, rain:false, alert:null, fresh:false}, sel:null};
+}
+function hud(){ $('clock').textContent = fmt(state?state.time:0); $('pts').textContent = state?state.total:0; }
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.hidden = s.id!==id); window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* ---------- map ---------- */
+function mapSVG(){
+  let s = `<svg viewBox="0 0 100 72" class="mapsvg" role="img" aria-label="Map of the territory and its outlets">`;
+  s += `<rect width="100" height="72" fill="var(--land)"/>`;
+  s += `<path class="river" d="M52 2 C62 6 70 9 80 11.5 S94 15 100 17"/><path class="river" d="M10 28 C22 32 36 27 48 31 S62 35 74 25"/>`;
+  s += `<text class="dist" x="4" y="34">BELAGAVI</text><text class="dist" x="70" y="22">BAGALKOT</text><text class="dist" x="16" y="56">DHARWAD</text><text class="dist" x="76" y="60">GADAG</text><text class="dist" x="56" y="71">HAVERI</text>`;
+  ROADS.forEach(([a,b,nh])=>{ const A=byId(a),B=byId(b); s+=`<line class="road${nh?' nh':''}" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`; });
+  s += `<text class="lbl" x="33" y="33" style="font-size:2px;fill:#5b6f84">NH-48</text>`;
+  s += `<g><rect x="${OFFICE.x-2}" y="${OFFICE.y-2}" width="4" height="4" rx=".6" fill="var(--blue)"/><text class="lbl" x="${OFFICE.x}" y="${OFFICE.y+5}" text-anchor="middle" style="font-size:2.1px">Office</text></g>`;
+  OUTLETS.forEach(o=>{
+    const v = state.visited[o.id], od = state.out[o.id].odour, alert = state.mods.alert===o.id && !v;
+    s += `<g class="pin${state.sel===o.id?' sel':''}" data-id="${o.id}" tabindex="0" role="button" aria-label="${o.name}">`;
+    if(alert) s += `<circle class="pulse" cx="${o.x}" cy="${o.y}" r="4" fill="none" stroke="var(--bad)" stroke-width=".8"/>`;
+    s += `<circle cx="${o.x}" cy="${o.y}" r="4.6" fill="transparent"/>`;
+    s += `<circle class="core" cx="${o.x}" cy="${o.y}" r="2.6" fill="${v?'var(--good)':'var(--yellow)'}" stroke="var(--blue-deep)" stroke-width=".6"/>`;
+    if(v) s += `<path d="M${o.x-1.1} ${o.y} l.8 .9 1.6-1.9" fill="none" stroke="#fff" stroke-width=".6"/>`;
+    else s += `<circle cx="${o.x}" cy="${o.y}" r=".9" fill="${odourColor(od)}"/>`;
+    s += `<text class="lbl" x="${o.x}" y="${o.y+5.4}" text-anchor="middle">${o.name.split(' ').slice(0,2).join(' ')}</text></g>`;
+  });
+  s += `<g id="jeep" transform="translate(${state.pos.x} ${state.pos.y})"><rect x="-3" y="-3.6" width="6" height="3" rx=".8" fill="var(--blue)" stroke="#fff" stroke-width=".3"/><rect x="-3" y="-2.4" width="6" height=".6" fill="var(--yellow)"/><circle cx="-1.8" cy="-.5" r=".8" fill="#222"/><circle cx="1.8" cy="-.5" r=".8" fill="#222"/></g>`;
+  return s + `</svg>`;
+}
+function renderMap(){
+  hud();
+  $('mapbox').innerHTML = mapSVG();
+  const feasible = OUTLETS.filter(o=>!state.visited[o.id] && state.time + travelMin(state.pos,o) + CLEAN_MIN <= DAY);
+  const left = OUTLETS.filter(o=>!state.visited[o.id]).length;
+  $('mapBanner').innerHTML = left===0 ? `<div class="banner">Every outlet inspected. Head back and file the report.</div>`
+    : feasible.length===0 ? `<div class="banner">Not enough shift left to reach another outlet. Time to file the report.</div>`
+    : state.mods.alert && !state.visited[state.mods.alert] ? `<div class="banner">IoT alert: ${byId(state.mods.alert).name} is spiking. Double points there.</div>` : '';
+  const sorted = OUTLETS.slice().sort((a,b)=> (!!state.visited[a.id]) - (!!state.visited[b.id]) || travelMin(state.pos,a)-travelMin(state.pos,b));
+  $('list').innerHTML = sorted.map(o=>{
+    const v = state.visited[o.id], od = state.out[o.id].odour, t = travelMin(state.pos,o), ok = state.time + t + CLEAN_MIN <= DAY;
+    return `<div class="card${v?' done':''}${state.sel===o.id?' sel':''}" data-card="${o.id}">
+      <div><h3>${o.name}</h3><div class="meta">${o.town} · ${o.tag}</div></div>
+      ${v ? `<span class="odour" style="background:var(--good)">${v.score} pts</span>` : `<span class="odour" style="background:${odourColor(od)}" title="DriveFresh odour index">Odour ${od}</span>`}
+      <div class="go"><span class="meta">${v ? 'Inspected · '+'★'.repeat(v.stars)+'☆'.repeat(3-v.stars) : t+' min drive · arrive '+fmt(state.time+t)}</span>
+      ${v ? '' : `<button data-go="${o.id}" ${ok?'':'disabled'}>${ok?'Drive here':'No time'}</button>`}</div></div>`;
+  }).join('');
+}
+$('mapbox').addEventListener('click', e=>{ const g = e.target.closest('.pin'); if(!g) return; selectOutlet(g.dataset.id); });
+$('mapbox').addEventListener('keydown', e=>{ const g = e.target.closest('.pin'); if(g && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); selectOutlet(g.dataset.id); }});
+$('list').addEventListener('click', e=>{ const b = e.target.closest('[data-go]'); if(b){ drive(b.dataset.go); return; } const c = e.target.closest('[data-card]'); if(c){ state.sel=c.dataset.card; renderMap(); }});
+function selectOutlet(id){ state.sel=id; renderMap(); const c = document.querySelector(`[data-card="${id}"]`); if(c) c.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+$('endday').onclick = finalReport;
+
+function drive(id){
+  const o = byId(id), from = {...state.pos}, t = travelMin(from,o);
+  const jeep = $('jeep'); const start = performance.now(), dur = 900;
+  document.querySelectorAll('[data-go]').forEach(b=>b.disabled=true);
+  tone(220,.4,'sawtooth',.02);
+  (function step(n){
+    const k = Math.min(1,(n-start)/dur), e = k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    const x = from.x+(o.x-from.x)*e, y = from.y+(o.y-from.y)*e;
+    if(jeep) jeep.setAttribute('transform',`translate(${x} ${y})`);
+    $('clock').textContent = fmt(state.time + t*e);
+    if(k<1) requestAnimationFrame(step);
+    else { state.time += t; state.pos = {x:o.x,y:o.y}; state.at = id; hud(); Math.random()<.45 ? roadEvent(id) : arrive(id); }
+  })(start);
+}
+
+/* ---------- events ---------- */
+function roadEvent(nextId){
+  const pending = OUTLETS.filter(o=>!state.visited[o.id] && o.id!==nextId && state.mods.alert!==o.id);
+  const evs = [
+    {i:'🚛', t:'Lorry jam on the bypass', d:'A row of tankers is parked across the road. You lose 20 minutes.', f:()=>{state.time+=20;}},
+    {i:'☕', t:'The dealer sent masala chai', d:'Energy up. You get 8 extra seconds in the next washroom.', f:()=>{state.mods.chai+=1;}},
+    {i:'🌧️', t:'Sudden monsoon shower', d:'Muddy shoes everywhere. Expect extra puddles at the next stop.', f:()=>{state.mods.rain=true;}},
+    {i:'🛣️', t:'Empty highway', d:'Smooth road, no traffic. You save 10 minutes.', f:()=>{state.time=Math.max(0,state.time-10);}},
+    {i:'🌼', t:'Fresh stock arrived', d:'New jasmine air-freshener cans. The Freshener works twice as fast for the rest of the day.', f:()=>{state.mods.fresh=true;}},
+  ];
+  if(pending.length){ const o = pick(pending); evs.push({i:'📡', t:'DriveFresh IoT alert', d:`The odour sensor at ${o.name} just spiked to 96. Clean it today for double points.`, f:()=>{state.mods.alert=o.id; state.out[o.id].level=3; state.out[o.id].odour=96;}}); }
+  const ev = pick(evs); ev.f(); hud();
+  $('evIcon').textContent = ev.i; $('evTitle').textContent = ev.t; $('evText').textContent = ev.d; $('evQuip').textContent = pick(EV_QUIPS);
+  $('evGo').onclick = () => arrive(nextId);
+  show('s-event');
+}
+
+/* ---------- arrival ---------- */
+function arrive(id){
+  const o = byId(id), lv = state.out[id].level;
+  $('arSign').innerHTML = `${o.name}<small>BPCL · ${o.tag}</small>`;
+  $('arLine').textContent = lv===0 ? pick(DEALER_CLEAN) : pick(DEALER_DIRTY);
+  $('arNote').textContent = pick(ARRIVE_NOTE).replace('{r}', o.tag.replace(/^NH-48, /,''));
+  $('arGo').onclick = () => startRoom(id);
+  show('s-arrive');
+}
+
+/* ---------- room ---------- */
+const ROOM_SVG = `<svg class="roomsvg" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+<pattern id="tl" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#f4f9fc"/><path d="M10 0V10H0" fill="none" stroke="#c9dbe7" stroke-width=".6"/></pattern>
+<pattern id="fl" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#d3dce4"/><rect width="6" height="6" fill="#bac6d1"/><rect x="6" y="6" width="6" height="6" fill="#bac6d1"/></pattern>
+<linearGradient id="mi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9f6fc"/><stop offset="1" stop-color="#b6d7e9"/></linearGradient>
+</defs>
+<rect width="160" height="72" fill="url(#tl)"/>
+<rect y="44" width="160" height="2.4" fill="#0a4fa3"/><rect y="46.4" width="160" height=".9" fill="#ffd31a"/>
+<rect y="72" width="160" height="28" fill="url(#fl)"/><rect y="70.5" width="160" height="2" fill="#8ea3b5"/>
+<rect x="2" y="18" width="13" height="53" fill="#b07a45"/><rect x="4" y="21" width="9" height="20" fill="#9a6838"/><rect x="4" y="45" width="9" height="22" fill="#9a6838"/><circle cx="12.5" cy="44" r=".9" fill="#ffd31a"/>
+<rect x="22" y="11" width="30" height="25" rx="2" fill="url(#mi)" stroke="#8aa4b6"/><path d="M27 15 L33 15 L26 24Z M36 15 L39 15 L30 30 L27 30Z" fill="#fff" opacity=".6"/>
+<rect x="35" y="49" width="4" height="22" fill="#e8eef2" stroke="#b8c6d0" stroke-width=".5"/>
+<path d="M22 44 H52 Q52 53 37 53 Q22 53 22 44Z" fill="#fff" stroke="#b8c6d0" stroke-width=".6"/>
+<rect x="35.5" y="39.5" width="3" height="4.5" fill="#9fb1bf"/><rect x="35.5" y="39.5" width="6" height="1.5" fill="#9fb1bf"/>
+<rect x="56" y="30" width="7" height="10" rx="1.5" fill="#fff" stroke="#9fb1bf" stroke-width=".6"/><rect id="soapLv" x="57.5" y="32" width="4" height="5.5" rx=".6" fill="#7fd3a8"/>
+<rect x="58" y="79" width="8" height="10" rx="1" fill="#0a4fa3"/><rect x="57.4" y="78" width="9.2" height="2" rx=".8" fill="#06305f"/>
+<rect x="66" y="14" width="10" height="6" rx="1" fill="#24364a"/><circle id="led" cx="68.4" cy="17" r="1" fill="#16a35f"/><text x="70.2" y="17.8" font-size="2.1" fill="#cfe7f2" font-family="monospace">IoT</text>
+<line x1="80" y1="0" x2="80" y2="5" stroke="#55606b" stroke-width=".6"/><path d="M77.5 5 h5 v1.5 h-5z" fill="#55606b"/><circle id="bulbG" cx="80" cy="9" r="3" fill="#fff6c2"/>
+<rect x="100" y="38" width="22" height="13" rx="2" fill="#fff" stroke="#b8c6d0" stroke-width=".6"/><rect x="108" y="36.5" width="6" height="1.8" rx=".8" fill="#c9d4dc"/>
+<path d="M99 52 H123 L124 57 H98Z" fill="#eef3f7" stroke="#b8c6d0" stroke-width=".5"/>
+<path d="M98 60 Q98 78 106 80 H116 Q124 78 124 60Z" fill="#fff" stroke="#b8c6d0" stroke-width=".6"/>
+<ellipse cx="111" cy="60" rx="13.5" ry="4.5" fill="#f2f6f9" stroke="#b8c6d0" stroke-width=".6"/><ellipse cx="111" cy="60.5" rx="9" ry="2.6" fill="#d7e6ef"/>
+<rect x="104" y="80" width="14" height="6" fill="#fff" stroke="#b8c6d0" stroke-width=".6"/>
+<circle cx="142" cy="54" r="6" fill="#dfe7ed" stroke="#9fb1bf" stroke-width=".6"/><g class="fan"><path d="M142 54 L142 49 Q144.5 50 142 54 L147 54 Q146 56.5 142 54 L142 59 Q139.5 58 142 54 L137 54 Q138 51.5 142 54Z" fill="#7f93a3"/></g>
+<rect x="130" y="10" width="24" height="28" rx="1.5" fill="#0a4fa3"/><text x="142" y="20" text-anchor="middle" font-size="5" fill="#ffd31a" font-family="Bungee, Impact, sans-serif">DRIVE</text><text x="142" y="26.5" text-anchor="middle" font-size="5" fill="#ffd31a" font-family="Bungee, Impact, sans-serif">FRESH</text><text x="142" y="32.5" text-anchor="middle" font-size="2" fill="#fff" font-family="sans-serif">Be fresh, drive fresh</text>
+</svg>`;
+
+function issueSVG(t){
+  switch(t){
+    case 'stain': return `<svg viewBox="0 0 100 70" style="transform:rotate(${rnd(-40,40)}deg)"><path d="M20 35 C5 10 40 0 55 12 C70 2 98 15 88 35 C100 55 70 70 50 60 C30 72 2 60 20 35Z" fill="#7a5a2b" opacity=".85"/><path d="M35 30 C40 20 60 20 66 32 C70 44 46 50 35 30Z" fill="#5e4320" opacity=".7"/><circle cx="90" cy="60" r="5" fill="#7a5a2b"/><circle cx="10" cy="18" r="4" fill="#7a5a2b"/></svg>`;
+    case 'puddle': return `<svg viewBox="0 0 100 40"><path d="M6 20 C4 6 30 2 50 6 C75 0 98 8 94 22 C98 36 60 40 45 34 C25 40 2 34 6 20Z" fill="#86c3e6" opacity=".85"/><ellipse cx="34" cy="14" rx="12" ry="3" fill="#fff" opacity=".7"/><ellipse cx="70" cy="26" rx="5" ry="8" fill="#6b4a22" opacity=".55" transform="rotate(70 70 26)"/></svg>`;
+    case 'litter': return Math.random()<.5
+      ? `<svg viewBox="0 0 100 100"><polygon points="20,30 45,12 72,22 88,46 74,80 40,88 14,66" fill="#f5f2e6" stroke="#a9a28e" stroke-width="4"/><path d="M30 40 L60 30 M38 60 L70 50 M45 20 L50 80" stroke="#c6bfab" stroke-width="3"/></svg>`
+      : `<svg viewBox="0 0 100 100"><g transform="rotate(${rnd(-30,30)} 50 50)"><path d="M22 18 H78 L72 82 H28Z" fill="#e2483b" stroke="#9b2a20" stroke-width="3"/><rect x="25" y="40" width="50" height="16" fill="#ffd31a"/><path d="M22 18 L30 12 L38 18 L46 12 L54 18 L62 12 L70 18 L78 12" stroke="#9b2a20" stroke-width="3" fill="none"/></g></svg>`;
+    case 'cobweb': return `<svg viewBox="0 0 100 100" fill="none" stroke="#7f8896" stroke-width="2"><path d="M50 0 L50 100 M0 50 L100 50 M10 10 L90 90 M90 10 L10 90"/><circle cx="50" cy="50" r="14"/><circle cx="50" cy="50" r="28"/><circle cx="50" cy="50" r="44"/><circle cx="66" cy="62" r="4" fill="#333" stroke="none"/></svg>`;
+    case 'smudge': return `<svg viewBox="0 0 100 100"><circle cx="40" cy="45" r="30" fill="#8d9aa6" opacity=".45"/><circle cx="64" cy="58" r="22" fill="#8d9aa6" opacity=".4"/><path d="M28 40 Q40 28 52 40 M26 50 Q40 34 56 50 M30 60 Q42 46 56 60" stroke="#6c7883" stroke-width="3" fill="none" opacity=".7"/></svg>`;
+    case 'smell': return `<svg viewBox="0 0 100 100" fill="none" stroke="#79b52e" stroke-width="6" stroke-linecap="round"><path d="M22 92 C6 72 38 62 22 42 C8 24 30 14 26 4"/><path d="M50 96 C34 76 66 66 50 46 C36 28 58 18 54 8"/><path d="M78 92 C62 72 94 62 78 42 C64 24 86 14 82 4"/></svg>`;
+    case 'soap': return `<svg viewBox="0 0 100 60"><rect x="4" y="8" width="92" height="44" rx="14" fill="#de4336" stroke="#fff" stroke-width="5"/><text x="50" y="40" text-anchor="middle" font-family="Bungee, Impact, sans-serif" font-size="24" fill="#fff">EMPTY</text></svg>`;
+    case 'bulb': return `<svg viewBox="0 0 100 60"><rect x="4" y="8" width="92" height="44" rx="14" fill="#24364a" stroke="#ffd31a" stroke-width="5"/><text x="50" y="40" text-anchor="middle" font-family="Bungee, Impact, sans-serif" font-size="22" fill="#ffd31a">FUSED</text></svg>`;
+    case 'roach': return `<svg viewBox="0 0 100 70"><g stroke="#3b2210" stroke-width="4" stroke-linecap="round"><path d="M35 20 L18 6 M50 18 L50 4 M65 20 L82 6 M35 50 L16 64 M50 52 L50 66 M65 50 L84 64 M86 30 L99 20 M86 40 L99 50"/></g><ellipse cx="50" cy="35" rx="32" ry="18" fill="#6b3a17"/><ellipse cx="84" cy="35" rx="9" ry="9" fill="#4a2810"/><path d="M50 18 V52" stroke="#4a2810" stroke-width="3"/></svg>`;
+  }
+}
+function pos(t, used){
+  switch(t){
+    case 'stain': return Math.random()<.5 ? [rnd(103,119),rnd(64,75)] : [rnd(22,148),rnd(79,93)];
+    case 'puddle': return [rnd(24,140),rnd(81,93)];
+    case 'litter': return [rnd(18,150),rnd(76,95)];
+    case 'cobweb': { const c = used.cobweb ? [153,5] : (Math.random()<.5?[6,5]:[153,5]); if(used.cobweb && used.cobweb[0]===153) c[0]=6; used.cobweb=c; return c; }
+    case 'smudge': return [rnd(27,47),rnd(16,31)];
+    case 'smell': return [rnd(92,130),rnd(24,48)];
+    case 'soap': return [59.5,35];
+    case 'bulb': return [80,9];
+    case 'roach': return [rnd(22,140),rnd(78,92)];
+  }
+}
+function makeList(level, rain){
+  if(level===0) return rain?['litter','puddle']:['litter'];
+  const n = [0,5,7,10][level], pool = ['stain','stain','puddle','litter','litter','cobweb','smudge','roach','smell'];
+  const list = ['smell'];
+  if(level>=2 || Math.random()<.35) list.push('bulb');
+  if(Math.random()<.7) list.push('soap');
+  while(list.length<n){
+    const t = pick(pool), c = list.filter(x=>x===t).length;
+    if((t==='cobweb'||t==='roach'||t==='smell') && c>=2) continue;
+    list.push(t);
+  }
+  if(rain) list.push('puddle','puddle');
+  return list;
+}
+function buildTools(){
+  $('tools').innerHTML = TOOL_KEYS.map((k,i)=>`<button class="tool" data-tool="${k}" aria-pressed="false"><kbd>${i+1}</kbd><span class="i">${TOOLS[k].icon}</span><span class="n">${TOOLS[k].name}</span></button>`).join('');
+}
+buildTools();
+$('tools').addEventListener('click', e=>{ const b = e.target.closest('[data-tool]'); if(b) setTool(b.dataset.tool); });
+function setTool(k){
+  if(!room) return; room.tool = k;
+  document.querySelectorAll('.tool').forEach(b=>{ const on = b.dataset.tool===k; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); });
+  room.cursor.textContent = TOOLS[k].icon; tone(600,.04,'square',.015);
+}
+document.addEventListener('keydown', e=>{ if(!room||!room.active) return; const n = parseInt(e.key,10); if(n>=1&&n<=8) setTool(TOOL_KEYS[n-1]); });
+
+function startRoom(id){
+  const o = byId(id), info = state.out[id];
+  const stage = $('stage');
+  stage.innerHTML = ROOM_SVG + `<div class="dark" id="dark" hidden></div><div class="say" id="say"></div><div class="cursor" id="cursor"></div>`;
+  const list = makeList(info.level, state.mods.rain); state.mods.rain = false;
+  const used = {};
+  const t0 = 40 + state.mods.chai*8 + Math.max(0,list.length-7)*3; state.mods.chai = 0;
+  room = {id, o, issues:[], t:t0, t0, tool:null, active:true, cursor:$('cursor'), lastWrong:0, lastFoam:0, temp: +(rnd(27,31)).toFixed(1)};
+  list.forEach((type,k)=>{
+    const [x,y] = pos(type, used), T = TYPES[type];
+    const el = document.createElement('div');
+    el.className='issue'; el.dataset.type=type;
+    el.style.left = (x/160*100)+'%'; el.style.top = (y/100*100)+'%'; el.style.width = `max(${(T.w/160*100).toFixed(2)}%, 30px)`;
+    el.innerHTML = issueSVG(type);
+    stage.appendChild(el);
+    room.issues.push({k, type, x, y, hp:100, el, done:false, vx:rnd(-1,1)*14, vy:rnd(-1,1)*6});
+  });
+  if(list.includes('bulb')) $('dark').hidden = false, stage.querySelector('#bulbG').setAttribute('fill','#7a7f86');
+  if(list.includes('soap')) stage.querySelector('#soapLv').setAttribute('height','.6'), stage.querySelector('#soapLv').setAttribute('y','36.9');
+  room.before = sensors();
+  $('rmName').textContent = o.name; $('rmTag').textContent = o.town + ' · ' + o.tag + (state.mods.alert===id?' · IoT alert x2':'');
+  document.querySelectorAll('.tool').forEach(b=>{b.classList.remove('on'); b.setAttribute('aria-pressed','false');});
+  $('hint').textContent = 'Pick a tool, then rub over the mess. Tap litter, bulbs, soap and cockroaches.';
+  $('think').textContent = pick(THINK_START); $('combo').textContent = ''; room.combo = 0; room.lastFix = 0;
+  updateRoom();
+  show('s-room');
+  keepAwake();
+  say(info.level===0 ? pick(['Looks almost spotless. Find anything left?','Wow, a clean one! Is this a dream?','Dealer was not lying. Mark the date.'])
+    : info.level===3 ? pick(['WHO DID THIS?!','The IoT sensor just resigned.','Sahab, this is a crime scene.','Smells like a fish market in May.'])
+    : pick(['Ugh. Pick a tool and get scrubbing!','Not great, not terrible. Mostly terrible.','Sleeves up, Sahab!']));
+  clearInterval(room.timer);
+  room.timer = setInterval(tick, 100);
+}
+function say(txt){ const s=$('say'); if(!s) return; s.textContent = txt; s.classList.add('show'); clearTimeout(say.h); say.h = setTimeout(()=>s.classList.remove('show'), 1800); }
+function sensors(){
+  let od=0, hum=0;
+  room.issues.forEach(i=>{ if(i.done) return; const T=TYPES[i.type]; od += T.odour*Math.max(0,i.hp)/100; hum += (T.hum||0)*Math.max(0,i.hp)/100; });
+  const odour = Math.min(99, Math.round(4 + od*1.7));
+  return {odour, tvoc: Math.round(130 + od*24), hum: Math.min(96, Math.round(54 + hum + (od>20?5:0))), temp: room.temp};
+}
+function srow(label, val, unit, pct, color){ return `<div class="srow"><span>${label}</span><b style="color:${color}">${val}${unit}</b><div class="m"><i style="width:${Math.max(4,Math.min(100,pct))}%;background:${color}"></i></div></div>`; }
+function updateRoom(){
+  const s = sensors();
+  $('sens').innerHTML =
+    srow('Odour index', s.odour, '', s.odour, odourColor(s.odour)) +
+    srow('TVOC', s.tvoc, ' ppb', s.tvoc/15, s.tvoc<400?'var(--good)':s.tvoc<900?'var(--warn)':'var(--bad)') +
+    srow('Humidity', s.hum, '%', s.hum, s.hum<65?'var(--good)':s.hum<78?'var(--warn)':'var(--bad)') +
+    srow('Temperature', s.temp, '°C', (s.temp-15)*4, 'var(--blue)');
+  const led = $('stage').querySelector('#led'); if(led) led.setAttribute('fill', s.odour<25?'#16a35f':s.odour<55?'#e8961a':'#de4336');
+  const left = room.issues.filter(i=>!i.done).length;
+  $('leftCount').textContent = left ? `${left} problem${left>1?'s':''} left of ${room.issues.length}` : 'All clean!';
+}
+function tick(){
+  if(!room.active) return;
+  room.t = Math.max(0, room.t - .1);
+  const k = room.t/room.t0;
+  $('tFill').style.width = (k*100)+'%';
+  $('tFill').style.background = k>.5?'var(--good)':k>.25?'var(--warn)':'var(--bad)';
+  $('tLeft').textContent = Math.ceil(room.t)+'s';
+  room.issues.forEach(i=>{
+    if(i.type!=='roach'||i.done) return;
+    if(Math.random()<.04){ i.vx = rnd(-1,1)*18; i.vy = rnd(-1,1)*8; }
+    i.x += i.vx*.1; i.y += i.vy*.1;
+    if(i.x<20||i.x>148) i.vx*=-1, i.x=Math.max(20,Math.min(148,i.x));
+    if(i.y<76||i.y>95) i.vy*=-1, i.y=Math.max(76,Math.min(95,i.y));
+    i.el.style.left = (i.x/160*100)+'%'; i.el.style.top = i.y+'%';
+    i.el.style.transform = `translate(-50%,-50%) rotate(${Math.atan2(i.vy,i.vx)*180/Math.PI}deg)`;
+  });
+  if(!room.saidMid && room.t <= room.t0/2){ room.saidMid=true; say(pick(KNOCKS)); $('think').textContent = pick(THINK_MID); }
+  if(!room.saidLow && room.t <= 8){ room.saidLow=true; say(pick(LOW_TIME)); buzzPhone([60,40,60]); }
+  if(room.t<=0) finishRoom(false);
+}
+function stagePoint(cx,cy){ const r=$('stage').getBoundingClientRect(); return {x:cx-r.left, y:cy-r.top, w:r.width}; }
+function hitAt(cx, cy, down, d){
+  let el = null;
+  for(const n of document.elementsFromPoint(cx,cy)){ const c = n.closest && n.closest('.issue'); if(c && !c.classList.contains('gone')){ el=c; break; } }
+  if(!el){ if(down && !room.tool) say(pick(NO_TOOL)); return; }
+  const iss = room.issues.find(i=>i.el===el); if(!iss||iss.done) return;
+  const T = TYPES[iss.type];
+  if(!room.tool){ if(down) say(pick(NO_TOOL)); return; }
+  if(room.tool!==T.tool){ const n=performance.now(); if(down || n-room.lastWrong>1500){ room.lastWrong=n; const h=pick(T.hint); say(h); $('hint').textContent=h; buzz(); buzzPhone(40); } return; }
+  if(T.mode==='tap'){ if(down) resolve(iss); return; }
+  const p = stagePoint(cx,cy);
+  let dmg = down ? 6 : d/p.w*240;
+  if(iss.type==='smell' && state.mods.fresh) dmg*=2;
+  iss.hp -= dmg;
+  foam(p.x,p.y); squeak();
+  if(iss.hp<=0) resolve(iss); else { el.style.opacity = .2 + .8*iss.hp/100; updateRoom(); }
+}
+function foam(x,y){
+  const n=performance.now(); if(n-room.lastFoam<45) return; room.lastFoam=n;
+  const f=document.createElement('div'); f.className='foam'; f.style.left=(x-6)+'px'; f.style.top=(y-6)+'px'; f.style.setProperty('--dx', rnd(-18,18)+'px');
+  if(room.tool==='fresh') f.style.background='radial-gradient(circle at 35% 35%,#fff,#f7c6e0)';
+  $('stage').appendChild(f); setTimeout(()=>f.remove(),700);
+}
+function resolve(iss){
+  iss.done = true; iss.hp = 0; iss.el.classList.add('gone'); setTimeout(()=>iss.el.remove(), 400);
+  const stage = $('stage');
+  if(iss.type==='bulb'){ $('dark').hidden = true; stage.querySelector('#bulbG').setAttribute('fill','#fff6c2'); }
+  if(iss.type==='soap'){ const s=stage.querySelector('#soapLv'); s.setAttribute('height','5.5'); s.setAttribute('y','32'); }
+  const p = document.createElement('div'); p.className='pop'; p.textContent = pick(POPS);
+  p.style.left = (iss.x/160*100)+'%'; p.style.top = iss.y+'%'; stage.appendChild(p); setTimeout(()=>p.remove(),900);
+  const now = performance.now();
+  room.combo = now - room.lastFix < 2500 ? room.combo + 1 : 1; room.lastFix = now;
+  $('combo').textContent = COMBOS[Math.min(room.combo, COMBOS.length-1)] + (room.combo>1 ? ' x'+room.combo : '');
+  ding(); buzzPhone(25); updateRoom();
+  if(room.issues.every(i=>i.done)) { room.active=false; setTimeout(()=>finishRoom(true), 650); }
+}
+(function bindStage(){
+  const stage = $('stage'); let drag=null;
+  const moveCursor = e => { if(!room) return; const p=stagePoint(e.clientX,e.clientY); room.cursor.style.left=p.x+'px'; room.cursor.style.top=p.y+'px'; room.cursor.style.display = room.tool && (e.pointerType==='mouse'||drag) ? 'block':'none'; };
+  stage.addEventListener('pointerdown', e=>{ if(!room||!room.active) return; e.preventDefault(); try{stage.setPointerCapture(e.pointerId);}catch(_){} drag={x:e.clientX,y:e.clientY}; moveCursor(e); hitAt(e.clientX,e.clientY,true,0); });
+  stage.addEventListener('pointermove', e=>{ moveCursor(e); if(!drag||!room||!room.active) return; const d=Math.hypot(e.clientX-drag.x,e.clientY-drag.y); drag={x:e.clientX,y:e.clientY}; if(d>0) hitAt(e.clientX,e.clientY,false,d); });
+  const up = e=>{ drag=null; if(room && e.pointerType!=='mouse') room.cursor.style.display='none'; };
+  stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+  stage.addEventListener('pointerleave', ()=>{ if(room && !drag) room.cursor.style.display='none'; });
+})();
+
+function finishRoom(allDone){
+  if(!room) return;
+  clearInterval(room.timer); room.active=false;
+  const total = room.issues.length, done = room.issues.filter(i=>i.done).length;
+  let score = Math.round(done/total*70 + (done===total ? room.t/room.t0*30 : 0));
+  const alerted = state.mods.alert===room.id;
+  if(alerted) score*=2;
+  const pct = alerted ? score/2 : score;
+  const stars = pct>=88?3:pct>=68?2:pct>=40?1:0;
+  const after = sensors();
+  state.visited[room.id] = {score, stars, done, total};
+  state.out[room.id].odour = after.odour;
+  if(alerted) state.mods.alert = null;
+  state.total += score; state.time += CLEAN_MIN; hud();
+
+  const q = [pick(TRAVELLER[stars]), STAMPS[stars][0], STAMPS[stars][1]];
+  $('reName').textContent = room.o.name + (allDone?' · cleaned with '+Math.ceil(room.t)+'s to spare':' · time up');
+  $('reStars').innerHTML = [0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('');
+  $('reStamp').innerHTML = `<span class="stamp" style="color:${q[2]};border-color:${q[2]}">${q[1]}</span>`;
+  $('reScore').textContent = `+${score} Fresh points` + (alerted?' (IoT alert x2)':'');
+  const b = room.before;
+  $('reTable').innerHTML = `<tr><th>Sensor</th><th>Before</th><th>After</th></tr>
+    <tr><td>Odour index</td><td style="color:${odourColor(b.odour)}">${b.odour}</td><td style="color:${odourColor(after.odour)}">${after.odour}</td></tr>
+    <tr><td>TVOC</td><td>${b.tvoc} ppb</td><td>${after.tvoc} ppb</td></tr>
+    <tr><td>Humidity</td><td>${b.hum}%</td><td>${after.hum}%</td></tr>
+    <tr><td>Problems fixed</td><td></td><td>${done} / ${total}</td></tr>`;
+  $('reQuote').textContent = `Traveller says: "${q[0]}"`;
+  const anyLeft = OUTLETS.some(o=>!state.visited[o.id] && state.time + travelMin(state.pos,o) + CLEAN_MIN <= DAY);
+  $('reGo').textContent = anyLeft ? 'Back to the map' : 'File the day report';
+  $('reGo').onclick = anyLeft ? ()=>{ renderMap(); show('s-map'); } : finalReport;
+  room = null;
+  tone(allDone?784:220, .3, 'triangle', .05);
+  show('s-result');
+}
+
+/* ---------- final ---------- */
+function finalReport(){
+  const v = OUTLETS.filter(o=>state.visited[o.id]);
+  const avg = v.length ? Math.round(v.reduce((a,o)=>a+Math.min(100,state.visited[o.id].score),0)/v.length) : 0;
+  const cover = v.length/OUTLETS.length;
+  const eff = avg * (0.55 + 0.45*cover);
+  const rank = eff>=80?'Swachhata Samrat':eff>=62?'DriveFresh Champion':eff>=40?'Mop Apprentice':'Refresher training booked';
+  $('fRank').textContent = rank; $('fLine').textContent = RANK_LINES[rank];
+  const max = OUTLETS.length*100;
+  const overall = OUTLETS.reduce((a,o)=>a+(state.visited[o.id]?Math.min(100,state.visited[o.id].score):0),0);
+  const bonus = state.total - overall;
+  const certified = v.filter(o=>state.visited[o.id].stars>=2).length;
+  $('fScore').textContent = overall;
+  $('fOf').textContent = `out of ${max} · ${Math.round(overall/max*100)}% DriveFresh`;
+  $('fBonus').textContent = bonus>0 ? `+${bonus} IoT alert bonus · ${state.total} Fresh points total` : `${certified} of ${OUTLETS.length} toilets certified`;
+  const msg = `🚽🧽 I scored ${overall}/${max} in Toilet Cleaner Simulator (DriveFresh Edition)!\nRank: ${rank}\n${certified} of ${OUTLETS.length} toilets DriveFresh certified, ${state.total} Fresh points.\n"${RANK_LINES[rank]}"\nCan you beat me, Sahab? Be fresh, drive fresh! 🌸\n${GAME_URL}`;
+  $('wa').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+  $('copyRes').onclick = () => { const b=$('copyRes'); const done=t=>{b.textContent=t; setTimeout(()=>b.textContent='Copy score',1600);}; try{ navigator.clipboard.writeText(msg).then(()=>done('Copied!'),()=>done('Copy blocked')); }catch(e){ done('Copy blocked'); } };
+  $('fSum').textContent = `${v.length} of ${OUTLETS.length} toilets inspected · shift ended at ${fmt(Math.min(state.time, DAY))}. ` +
+    (cover<1 ? `${OUTLETS.length-v.length} washroom${OUTLETS.length-v.length>1?'s':''} still waiting for you tomorrow.` : 'Every outlet on the route is fresh today.');
+  $('fTable').innerHTML = `<tr><th>Outlet</th><th>District</th><th class="n">Fixed</th><th class="n">Stars</th><th class="n">Points</th></tr>` +
+    OUTLETS.map(o=>{ const r=state.visited[o.id]; return `<tr><td>${o.name}</td><td>${o.town}</td><td class="n">${r?r.done+'/'+r.total:'–'}</td><td class="n">${r?'★'.repeat(r.stars)+'☆'.repeat(3-r.stars):'Not visited'}</td><td class="n">${r?r.score:0}</td></tr>`; }).join('');
+  show('s-final');
+}
+
+/* ---------- boot ---------- */
+$('start').onclick = () => { state = newState(); renderMap(); show('s-map'); tone(523,.12); setTimeout(()=>tone(784,.2),120); };
+$('again').onclick = () => { state = newState(); renderMap(); show('s-map'); };
+window.claude?.hot?.snapshot?.(() => ({state}));
+function boot(data){
+  if(data && data.state && data.state.started){ state = data.state; renderMap(); show('s-map'); }
+  else { hud(); show('s-intro'); }
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+})();
+</script>
+
+</body></html>
