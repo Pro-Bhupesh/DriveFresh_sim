@@ -180,12 +180,7 @@ Scores land in a **Scores** tab with the time, name, score, rank title, toilets 
 
 ### Bhupesh Kumar Bajiya
 
-**Assistant Executive Engineer (Retail), Bharat Petroleum Corporation Limited**
-📍 Dharwad, Karnataka
-
-By day, Bhupesh looks after retail fuel outlets across the Belgaum Retail Territory: operations, maintenance, safety, statutory compliance and the IoT systems that keep outlets running. He also builds digital tools for the territory, from dashboards to field web apps.
-
-He made this game to turn DriveFresh, a campaign about something nobody likes talking about, into something people actually *want* to play and share. If a few laughs get more washrooms cleaned on the highway, mission accomplished.
+I made this game to turn DriveFresh, a campaign about something nobody likes talking about, into something people actually *want* to play and share. If a few laughs get more washrooms cleaned on the highway, mission accomplished.
 
 [![GitHub](https://img.shields.io/badge/GitHub-pro--bhupesh-181717?style=flat-square&logo=github)](https://github.com/pro-bhupesh)
 
