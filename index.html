@@ -6,6 +6,7 @@
 <meta name="description" content="Toilet Cleaner Simulator - DriveFresh Edition. Inspect and clean BPCL outlet washrooms before the travellers burst in.">
 <meta property="og:title" content="Toilet Cleaner Simulator - DriveFresh Edition">
 <meta property="og:description" content="Can you beat my score? Be fresh, drive fresh!">
+<meta property="og:url" content="https://drivefreshsim.in/">
 <title>Toilet Cleaner Simulator</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#0a4fa3">
@@ -173,6 +174,53 @@ p{margin:0 0 10px;max-width:65ch}
 .lb tr.me td{background:#fff4c2;font-weight:800}
 .lb td.pos{font-weight:800;width:44px}
 .lb .t{display:block;font-size:12px;color:var(--muted);font-weight:600}
+/* badges */
+.badgehead{font-family:var(--display);font-weight:400;color:var(--blue);font-size:18px;margin:0}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:560px}
+.bdg{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;padding:8px 4px;border-radius:12px;border:2px solid var(--grout);background:#fff;min-width:0}
+.bdg .ic{font-size:24px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--yellow);border:3px solid var(--blue-deep);box-shadow:0 3px 0 var(--blue-deep)}
+.bdg .bn{font-weight:800;font-size:12px;line-height:1.1}
+.bdg .bd{font-size:11px;color:var(--muted);line-height:1.15}
+.bdg.locked{opacity:.42;filter:grayscale(1)}
+.bdg.locked .ic{box-shadow:none}
+.newbadges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.newbadge{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);border:3px solid var(--blue-deep);border-radius:999px;padding:4px 14px 4px 6px;font-weight:800;box-shadow:0 3px 0 var(--blue-deep);animation:bdgIn .6s cubic-bezier(.2,1.6,.4,1) both}
+.newbadge .ic{font-size:22px;width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.newbadge small{display:block;font-size:11px;font-weight:700;color:var(--blue-deep);letter-spacing:.08em;text-transform:uppercase}
+@keyframes bdgIn{from{transform:scale(.3) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+@media (max-width:420px){.badges{grid-template-columns:repeat(2,1fr)}}
+
+/* how-to-play */
+.tutwrap{position:fixed;inset:0;z-index:50;background:rgba(6,48,95,.74);display:grid;place-items:center;padding-block:max(16px, env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-bottom,0px));padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+.tutcard{background:var(--paper);border:3px solid var(--yellow);border-radius:18px;box-shadow:0 6px 0 var(--blue-deep);max-width:440px;width:100%;max-height:100%;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.tutcard h2{margin:0}
+.tutstage{position:relative;aspect-ratio:16/10;max-width:100%;border-radius:12px;overflow:hidden;border:3px solid var(--blue-deep);background:#f4f9fc;background-image:linear-gradient(#c9dbe7 1px,transparent 1px),linear-gradient(90deg,#c9dbe7 1px,transparent 1px);background-size:24px 24px}
+.tfloor{position:absolute;left:0;right:0;bottom:0;height:46%;background:repeating-conic-gradient(#bac6d1 0 25%,#d3dce4 0 50%) 0 0/26px 26px;border-top:4px solid #8ea3b5}
+.tstain{position:absolute;left:50%;top:58%;width:28%;transform:translate(-50%,-50%);animation:tStain 4.6s infinite}
+.tpop{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-family:var(--display);font-size:24px;color:var(--good);text-shadow:2px 2px 0 #fff;opacity:0;animation:tPop 4.6s infinite}
+.tbub{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#cfe9f7);border:1px solid #a9d3ea;opacity:0;animation:tBub 4.6s infinite}
+.tbub.b1{left:44%;top:50%}.tbub.b2{left:56%;top:46%;animation-delay:.25s}.tbub.b3{left:50%;top:56%;animation-delay:.5s}
+.ttray{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:8px;padding:6px;background:rgba(255,255,255,.94);border-top:2px solid var(--grout)}
+.ttool{font-size:19px;width:38px;height:32px;display:grid;place-items:center;border:2px solid var(--grout);border-radius:8px;background:#fff}
+.ttool.t1{animation:tTool 4.6s infinite}
+.tfinger{position:absolute;font-size:36px;line-height:1;margin:-6px 0 0 -12px;animation:tFinger 4.6s infinite;filter:drop-shadow(1px 3px 2px rgba(0,0,0,.35));pointer-events:none}
+.tlabel span{position:absolute;left:8px;top:8px;background:var(--ink);color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap;opacity:0}
+.tlabel .l1{animation:tL1 4.6s infinite}.tlabel .l2{animation:tL2 4.6s infinite}.tlabel .l3{animation:tL3 4.6s infinite}
+@keyframes tL1{0%,23%{opacity:1}25%,100%{opacity:0}}
+@keyframes tL2{0%,24%{opacity:0}26%,75%{opacity:1}77%,100%{opacity:0}}
+@keyframes tL3{0%,76%{opacity:0}78%,98%{opacity:1}100%{opacity:0}}
+@keyframes tFinger{
+  0%{left:calc(50% - 69px);top:115%}
+  12%{left:calc(50% - 69px);top:calc(100% - 26px);transform:scale(1)}
+  16%{transform:scale(.8)} 20%{left:calc(50% - 69px);top:calc(100% - 26px);transform:scale(1)}
+  30%{left:40%;top:56%} 38%{left:60%;top:52%} 46%{left:40%;top:60%} 54%{left:60%;top:53%} 62%{left:42%;top:59%} 72%{left:58%;top:55%}
+  80%{left:58%;top:55%;opacity:1} 92%,100%{left:72%;top:115%;opacity:0}}
+@keyframes tTool{0%,15%{background:#fff;border-color:var(--grout)}17%,92%{background:var(--yellow);border-color:var(--blue-deep)}100%{background:#fff;border-color:var(--grout)}}
+@keyframes tStain{0%,30%{opacity:1}45%{opacity:.75}60%{opacity:.45}74%,94%{opacity:0}100%{opacity:1}}
+@keyframes tPop{0%,74%{opacity:0;transform:translate(-50%,-30%)}80%{opacity:1;transform:translate(-50%,-50%)}92%,100%{opacity:0;transform:translate(-50%,-110%)}}
+@keyframes tBub{0%,30%{opacity:0;transform:none}40%{opacity:1}55%{opacity:0;transform:translate(6px,-18px) scale(1.4)}56%{opacity:0;transform:none}62%{opacity:1}74%,100%{opacity:0;transform:translate(-6px,-18px) scale(1.4)}}
+.tutsteps{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+@media (prefers-reduced-motion:reduce){.tfinger{left:56%;top:54%}.tstain{opacity:.5}}
 .playerchip{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .report{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:420px}
 .report th,.report td{padding:8px;border-bottom:1px solid var(--grout);text-align:left}
@@ -279,7 +327,7 @@ body{-webkit-user-select:none;user-select:none}
           <input id="pname" name="pname" type="text" maxlength="30" autocomplete="name" placeholder="e.g. Ravi Kulkarni" required>
           <span class="err" id="nameErr"></span>
         </form>
-        <div class="row"><button class="big" id="start">Start shift</button><button class="ghost" id="boardBtn" type="button">Leaderboard</button><span class="badge">Be fresh, drive fresh</span></div>
+        <div class="row"><button class="big" id="start">Start shift</button><button class="ghost" id="boardBtn" type="button">Leaderboard</button><button class="ghost" id="howBtn" type="button">How to play</button><span class="badge">Be fresh, drive fresh</span></div>
       </div>
       <div class="intro-art">
         <div class="t">DRIVE FRESH</div>
@@ -368,6 +416,7 @@ body{-webkit-user-select:none;user-select:none}
       <div id="reStamp"></div>
       <h2 id="reScore"></h2>
       <table class="compare" id="reTable"></table>
+      <div class="newbadges" id="reBadges"></div>
       <p class="quote" id="reQuote"></p>
       <button class="big" id="reGo">Back to the map</button>
     </div>
@@ -393,6 +442,8 @@ body{-webkit-user-select:none;user-select:none}
       <div class="scorebig"><div class="eyebrow">Overall score</div><div class="num" id="fScore">0</div><div class="of" id="fOf"></div><div class="bonus" id="fBonus"></div></div>
       <div class="rank" id="fRank"></div>
       <p class="quote" id="fLine"></p>
+      <h3 class="badgehead" id="fBadgeHead"></h3>
+      <div class="badges" id="fBadges"></div>
       <div class="lbbox" id="lbFinal">
         <h3>Leaderboard</h3>
         <div class="lbstat" id="lbFinalStat"></div>
@@ -411,12 +462,35 @@ body{-webkit-user-select:none;user-select:none}
   </section>
 </div>
 
+<div class="tutwrap" id="tut" hidden role="dialog" aria-modal="true" aria-labelledby="tutTitle">
+  <div class="tutcard">
+    <div class="eyebrow">How to play</div>
+    <h2 id="tutTitle">Rub it till it shines</h2>
+    <div class="tutstage" aria-hidden="true">
+      <div class="tfloor"></div>
+      <div class="tlabel" style="position:absolute;inset:0"><span class="l1">1. Tap the Scrubber</span><span class="l2">2. Rub over the stain</span><span class="l3">3. Fresh!</span></div>
+      <svg class="tstain" viewBox="0 0 100 70"><path d="M20 35 C5 10 40 0 55 12 C70 2 98 15 88 35 C100 55 70 70 50 60 C30 72 2 60 20 35Z" fill="#7a5a2b" opacity=".88"/><path d="M35 30 C40 20 60 20 66 32 C70 44 46 50 35 30Z" fill="#5e4320" opacity=".7"/><circle cx="90" cy="60" r="5" fill="#7a5a2b"/><circle cx="10" cy="18" r="4" fill="#7a5a2b"/></svg>
+      <div class="tbub b1"></div><div class="tbub b2"></div><div class="tbub b3"></div>
+      <div class="tpop">Fresh!</div>
+      <div class="ttray"><span class="ttool t1">🧽</span><span class="ttool">🧹</span><span class="ttool">🗑️</span><span class="ttool">🧴</span></div>
+      <div class="tfinger">👆</div>
+    </div>
+    <ol class="tutsteps">
+      <li><b>Tap a tool</b> in the tray. Each mess has its own tool.</li>
+      <li><b>Rub your finger</b> over stains, puddles, cobwebs, mirror smudges and smell clouds until they vanish.</li>
+      <li><b>Just tap</b> litter, cockroaches, the empty soap dispenser and the fused bulb.</li>
+      <li>Beat the travellers' timer. Clean fast for bonus points and <b>badges</b>.</li>
+    </ol>
+    <button class="big" id="tutGo" type="button">Got it, let's clean!</button>
+  </div>
+</div>
+
 <script>
 (function(){
 const DAY = 540, CLEAN_MIN = 40;
-const GAME_URL = 'https://pro-bhupesh.github.io/DriveFresh_sumilator/';
+const GAME_URL = 'https://drivefreshsim.in/';
 /* Paste your Google Apps Script web app URL here (ends with /exec) */
-const SCOREBOARD_URL = 'https://script.google.com/macros/s/AKfycbyKLOpzJAzHuepHyltQEDYzIJfy7HgKLMkNlNvcxcQHkuv3H_Q9yEtxh3MNig0lcC3P/exec';
+const SCOREBOARD_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
 const boardOn = () => /^https:\/\/script\.google(usercontent)?\.com\//.test(SCOREBOARD_URL);
 const OUTLETS = [
   {id:'kittur',  name:'Kittur Rani Fuels',       town:'Belagavi', tag:'NH-48, Kittur',        x:20, y:24},
@@ -580,6 +654,29 @@ const EV_QUIPS = [
   'A cow on the road gives you a look of judgement.',
   'Somewhere, a dealer is quickly hiding a mop.',
 ];
+const BADGES = [
+  {id:'roach',   icon:'🪳', name:'Cockroach Hunter',  desc:'Spray 5 cockroaches in one shift'},
+  {id:'speed',   icon:'⚡', name:'Speed Mop',         desc:'Clean a whole toilet in under 15 seconds'},
+  {id:'perfect', icon:'🏆', name:'Perfect Shift',     desc:'Get all 5 toilets DriveFresh certified'},
+  {id:'combo',   icon:'🔥', name:'Combo King',        desc:'Fix 5 problems in a row without stopping'},
+  {id:'smell',   icon:'🌸', name:'Smell Slayer',      desc:'Clear 4 smell clouds'},
+  {id:'light',   icon:'💡', name:'Let There Be Light',desc:'Replace 3 fused bulbs'},
+  {id:'early',   icon:'🌅', name:'Early Bird',        desc:'Finish all 5 toilets before 5 PM'},
+  {id:'confused',icon:'🤡', name:'Confused Sahab',    desc:'Use the wrong tool 10 times'},
+];
+const BADGE_TESTS = {
+  roach:   s => s.stats.roach >= 5,
+  speed:   s => s.stats.fastest != null && s.stats.fastest < 15,
+  perfect: s => OUTLETS.every(o => s.visited[o.id] && s.visited[o.id].stars >= 2),
+  combo:   s => s.stats.bestCombo >= 5,
+  smell:   s => s.stats.smell >= 4,
+  light:   s => s.stats.bulb >= 3,
+  early:   s => OUTLETS.every(o => s.visited[o.id]) && s.time <= 480,
+  confused:s => s.stats.wrong >= 10,
+};
+function S(){ if(!state.stats) state.stats = {roach:0, smell:0, bulb:0, wrong:0, bestCombo:0, fastest:null}; if(!state.badges) state.badges = []; return state.stats; }
+function checkBadges(){ S(); const fresh = []; BADGES.forEach(b=>{ if(!state.badges.includes(b.id) && BADGE_TESTS[b.id](state)){ state.badges.push(b.id); fresh.push(b); } }); return fresh; }
+const earnedBadges = () => BADGES.filter(b => (state.badges||[]).includes(b.id));
 const RANK_LINES = {
   'Swachhata Samrat':'The TM wants to frame your photo in the territory office. Next to the fire extinguisher.',
   'DriveFresh Champion':'Dealers now hide when they see your jeep. That is respect.',
@@ -622,7 +719,7 @@ function newState(){
   const lv = shuffle([0,1,2,2,3]);
   const out = {};
   OUTLETS.forEach((o,i)=>{ out[o.id] = {level:lv[i], odour: Math.max(3, Math.min(97, Math.round([9,34,60,84][lv[i]] + rnd(-6,6))))}; });
-  return {started:true, player: playerName(), gameId: Date.now().toString(36)+Math.random().toString(36).slice(2,8), submitted:false, lb:null, time:0, pos:{x:OFFICE.x,y:OFFICE.y}, at:'office', total:0, visited:{}, out, mods:{chai:0, rain:false, alert:null, fresh:false}, sel:null};
+  return {started:true, player: playerName(), gameId: Date.now().toString(36)+Math.random().toString(36).slice(2,8), submitted:false, lb:null, stats:{roach:0, smell:0, bulb:0, wrong:0, bestCombo:0, fastest:null}, badges:[], time:0, pos:{x:OFFICE.x,y:OFFICE.y}, at:'office', total:0, visited:{}, out, mods:{chai:0, rain:false, alert:null, fresh:false}, sel:null};
 }
 function hud(){ $('clock').textContent = fmt(state?state.time:0); $('pts').textContent = state?state.total:0; }
 function show(id){ document.querySelectorAll('.screen').forEach(s=>s.hidden = s.id!==id); window.scrollTo({top:0,behavior:'smooth'}); }
@@ -773,13 +870,14 @@ function pos(t, used){
 }
 function makeList(level, rain){
   if(level===0) return rain?['litter','puddle']:['litter'];
-  const n = [0,5,7,10][level], pool = ['stain','stain','puddle','litter','litter','cobweb','smudge','roach','smell'];
+  const n = [0,5,7,10][level], pool = ['stain','stain','puddle','litter','litter','cobweb','smudge','roach','roach','smell'];
   const list = ['smell'];
   if(level>=2 || Math.random()<.35) list.push('bulb');
   if(Math.random()<.7) list.push('soap');
   while(list.length<n){
     const t = pick(pool), c = list.filter(x=>x===t).length;
-    if((t==='cobweb'||t==='roach'||t==='smell') && c>=2) continue;
+    if((t==='cobweb'||t==='smell') && c>=2) continue;
+    if(t==='roach' && c>=3) continue;
     list.push(t);
   }
   if(rain) list.push('puddle','puddle');
@@ -817,6 +915,7 @@ function startRoom(id){
   if(list.includes('bulb')) $('dark').hidden = false, stage.querySelector('#bulbG').setAttribute('fill','#7a7f86');
   if(list.includes('soap')) stage.querySelector('#soapLv').setAttribute('height','.6'), stage.querySelector('#soapLv').setAttribute('y','36.9');
   room.before = sensors();
+  $('tLeft').textContent = Math.ceil(t0)+'s'; $('tFill').style.width = '100%'; $('tFill').style.background = 'var(--good)';
   $('rmName').textContent = o.name; $('rmTag').textContent = o.town + ' · ' + o.tag + (state.mods.alert===id?' · IoT alert x2':'');
   document.querySelectorAll('.tool').forEach(b=>{b.classList.remove('on'); b.setAttribute('aria-pressed','false');});
   $('hint').textContent = 'Pick a tool, then rub over the mess. Tap litter, bulbs, soap and cockroaches.';
@@ -829,6 +928,12 @@ function startRoom(id){
     : pick(['Ugh. Pick a tool and get scrubbing!','Not great, not terrible. Mostly terrible.','Sleeves up, Sahab!']));
   clearInterval(room.timer);
   room.timer = setInterval(tick, 100);
+  if(!tutSeen()){ room.active = false; const r = room; showTut(()=>{ if(room===r){ r.active = true; say('Go go go!'); } }); }
+}
+function tutSeen(){ try{ return localStorage.getItem('dfsim-tut')==='1'; }catch(e){ return !!tutSeen.mem; } }
+function showTut(after){
+  const t=$('tut'); t.hidden=false; setTimeout(()=>$('tutGo').focus(),50);
+  $('tutGo').onclick = () => { t.hidden=true; tutSeen.mem=true; try{ localStorage.setItem('dfsim-tut','1'); }catch(e){} if(after) after(); };
 }
 function say(txt){ const s=$('say'); if(!s) return; s.textContent = txt; s.classList.add('show'); clearTimeout(say.h); say.h = setTimeout(()=>s.classList.remove('show'), 1800); }
 function sensors(){
@@ -877,7 +982,7 @@ function hitAt(cx, cy, down, d){
   const iss = room.issues.find(i=>i.el===el); if(!iss||iss.done) return;
   const T = TYPES[iss.type];
   if(!room.tool){ if(down) say(pick(NO_TOOL)); return; }
-  if(room.tool!==T.tool){ const n=performance.now(); if(down || n-room.lastWrong>1500){ room.lastWrong=n; const h=pick(T.hint); say(h); $('hint').textContent=h; buzz(); buzzPhone(40); } return; }
+  if(room.tool!==T.tool){ const n=performance.now(); if(down || n-room.lastWrong>1500){ room.lastWrong=n; if(down) S().wrong++; const h=pick(T.hint); say(h); $('hint').textContent=h; buzz(); buzzPhone(40); } return; }
   if(T.mode==='tap'){ if(down) resolve(iss); return; }
   const p = stagePoint(cx,cy);
   let dmg = down ? 6 : d/p.w*240;
@@ -901,6 +1006,8 @@ function resolve(iss){
   p.style.left = (iss.x/160*100)+'%'; p.style.top = iss.y+'%'; stage.appendChild(p); setTimeout(()=>p.remove(),900);
   const now = performance.now();
   room.combo = now - room.lastFix < 2500 ? room.combo + 1 : 1; room.lastFix = now;
+  const st = S(); if(st[iss.type] !== undefined && typeof st[iss.type]==='number' && ['roach','smell','bulb'].includes(iss.type)) st[iss.type]++;
+  st.bestCombo = Math.max(st.bestCombo, room.combo);
   $('combo').textContent = COMBOS[Math.min(room.combo, COMBOS.length-1)] + (room.combo>1 ? ' x'+room.combo : '');
   ding(); buzzPhone(25); updateRoom();
   if(room.issues.every(i=>i.done)) { room.active=false; setTimeout(()=>finishRoom(true), 650); }
@@ -929,6 +1036,10 @@ function finishRoom(allDone){
   state.out[room.id].odour = after.odour;
   if(alerted) state.mods.alert = null;
   state.total += score; state.time += CLEAN_MIN; hud();
+  if(allDone){ const used = room.t0 - room.t; S().fastest = S().fastest==null ? used : Math.min(S().fastest, used); }
+  const fresh = checkBadges();
+  $('reBadges').innerHTML = fresh.map((b,i)=>`<span class="newbadge" style="animation-delay:${.2+i*.15}s"><span class="ic">${b.icon}</span><span><small>Badge unlocked</small>${b.name}</span></span>`).join('');
+  if(fresh.length) setTimeout(()=>{ tone(880,.1); setTimeout(()=>tone(1175,.1),100); setTimeout(()=>tone(1568,.2),200); buzzPhone([30,30,30]); }, 300);
 
   const q = [pick(TRAVELLER[stars]), STAMPS[stars][0], STAMPS[stars][1]];
   $('reName').textContent = room.o.name + (allDone?' · cleaned with '+Math.ceil(room.t)+'s to spare':' · time up');
@@ -969,7 +1080,11 @@ function finalReport(){
     (cover<1 ? `${OUTLETS.length-v.length} washroom${OUTLETS.length-v.length>1?'s':''} still waiting for you tomorrow.` : 'Every outlet on the route is fresh today.');
   $('fTable').innerHTML = `<tr><th>Outlet</th><th>District</th><th class="n">Fixed</th><th class="n">Stars</th><th class="n">Points</th></tr>` +
     OUTLETS.map(o=>{ const r=state.visited[o.id]; return `<tr><td>${o.name}</td><td>${o.town}</td><td class="n">${r?r.done+'/'+r.total:'–'}</td><td class="n">${r?'★'.repeat(r.stars)+'☆'.repeat(3-r.stars):'Not visited'}</td><td class="n">${r?r.score:0}</td></tr>`; }).join('');
-  const res = {overall, max, rank, line:RANK_LINES[rank], certified, total:state.total, name:state.player};
+  checkBadges();
+  const eb = earnedBadges();
+  $('fBadgeHead').textContent = `Badges · ${eb.length} of ${BADGES.length} unlocked`;
+  $('fBadges').innerHTML = BADGES.map(b=>{ const on = eb.includes(b); return `<div class="bdg${on?'':' locked'}" title="${b.desc}"><span class="ic">${b.icon}</span><span class="bn">${b.name}</span><span class="bd">${b.desc}</span></div>`; }).join('');
+  const res = {overall, max, rank, line:RANK_LINES[rank], certified, total:state.total, name:state.player, badges:eb};
   $('cardImg').hidden = true; $('cardNote').hidden = true; $('wa').disabled = true;
   show('s-final');
 
@@ -978,7 +1093,7 @@ function finalReport(){
   $('lbFinal').hidden = false;
   if(state.submitted && state.lb){ renderBoard($('lbFinalStat'), $('lbFinalTable'), state.lb, true); done(state.lb); return; }
   $('lbFinalStat').className='lbstat'; $('lbFinalStat').textContent = 'Saving your score to the leaderboard...'; $('lbFinalTable').innerHTML='';
-  const payload = {action:'submit', gameId:state.gameId, name:state.player, score:overall, fresh:state.total, title:rank, cleaned:v.length, certified, shiftEnd:fmt(Math.min(state.time,DAY))};
+  const payload = {action:'submit', gameId:state.gameId, name:state.player, score:overall, fresh:state.total, title:rank, cleaned:v.length, certified, shiftEnd:fmt(Math.min(state.time,DAY)), badges: eb.map(b=>b.name).join(', ')};
   withTimeout(postScore(payload), 12000).then(lb=>{
     if(!lb || !lb.ok) throw new Error(lb && lb.error || 'Save failed');
     state.submitted = true; state.lb = lb;
@@ -1026,11 +1141,12 @@ function openBoard(from){
     .catch(()=>{ $('lbStat').textContent = 'Could not load the leaderboard. Check your internet and tap Refresh.'; });
 }
 $('boardBtn').onclick = () => openBoard('s-intro');
+$('howBtn').onclick = () => showTut();
 $('lbRefresh').onclick = () => openBoard(boardFrom);
 $('lbBack').onclick = () => show(boardFrom);
 
 function buildShare(res, lb){
-  const rk = lb && lb.rank ? `\nLeaderboard: #${lb.rank} of ${lb.players} players` : '';
+  const rk = (lb && lb.rank ? `\nLeaderboard: #${lb.rank} of ${lb.players} players` : '') + (res.badges && res.badges.length ? `\nBadges: ${res.badges.map(b=>b.icon+' '+b.name).join(', ')}` : '');
   const msg = `🚽🧽 ${res.name} scored ${res.overall}/${res.max} in Toilet Cleaner Simulator (DriveFresh Edition)!\nRank: ${res.rank}${rk}\n${res.certified} of ${OUTLETS.length} toilets DriveFresh certified, ${res.total} Fresh points.\n"${res.line}"\nCan you beat me, Sahab? Be fresh, drive fresh! 🌸\n${GAME_URL}`;
   shareData = {msg, file:null};
   $('wa').disabled = false;
@@ -1047,17 +1163,17 @@ function rr(x,X,Y,w,h,r){ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,
 function wrapText(x,text,cx,y,maxW,lh,maxLines){ const words=text.split(' '); const lines=[]; let line=''; for(const w of words){ const t=line?line+' '+w:w; if(x.measureText(t).width>maxW && line){ lines.push(line); line=w; } else line=t; } lines.push(line); lines.slice(0,maxLines).forEach((l,i)=>x.fillText(l,cx,y+i*lh)); }
 async function drawCard(d){
   try{ await Promise.all(['64px Bungee','800 40px "Baloo 2"','600 34px "Baloo 2"','italic 600 34px "Baloo 2"'].map(f=>document.fonts.load(f))); }catch(e){}
-  const W=1080,H=1350, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  const W=1080,H=1450, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   const DISP='Bungee, Impact, sans-serif', BODY='"Baloo 2", "Segoe UI", sans-serif';
   x.fillStyle='#e3edf4'; x.fillRect(0,0,W,H);
   x.strokeStyle='#cddde8'; x.lineWidth=3;
   for(let i=0;i<=W;i+=90){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,H); x.stroke(); }
   for(let j=0;j<=H;j+=90){ x.beginPath(); x.moveTo(0,j); x.lineTo(W,j); x.stroke(); }
-  x.fillStyle='#06305f'; rr(x,60,74,960,1230,40); x.fill();
-  x.fillStyle='#fff'; rr(x,60,60,960,1230,40); x.fill(); x.lineWidth=8; x.strokeStyle='#0a4fa3'; x.stroke();
-  x.save(); rr(x,60,60,960,1230,40); x.clip();
+  x.fillStyle='#06305f'; rr(x,60,74,960,1330,40); x.fill();
+  x.fillStyle='#fff'; rr(x,60,60,960,1330,40); x.fill(); x.lineWidth=8; x.strokeStyle='#0a4fa3'; x.stroke();
+  x.save(); rr(x,60,60,960,1330,40); x.clip();
   x.fillStyle='#0a4fa3'; x.fillRect(60,60,960,240); x.fillStyle='#ffd31a'; x.fillRect(60,300,960,10);
-  x.fillRect(60,1190,960,10); x.fillStyle='#0a4fa3'; x.fillRect(60,1200,960,90);
+  x.fillRect(60,1290,960,10); x.fillStyle='#0a4fa3'; x.fillRect(60,1300,960,90);
   x.restore();
   x.textAlign='center'; x.textBaseline='alphabetic';
   x.fillStyle='#ffd31a'; x.font='72px '+DISP; x.fillText('TOILET CLEANER',540,160); x.fillText('SIMULATOR',540,240);
@@ -1081,9 +1197,21 @@ async function drawCard(d){
     y+=62;
   });
   x.textAlign='center'; x.fillStyle='#5b6f84'; x.font='italic 600 34px '+BODY;
-  wrapText(x, '“'+d.line+'”', 540, 1135, 860, 42, 2);
-  x.fillStyle='#ffffff'; x.font='800 32px '+BODY; x.fillText('Play: pro-bhupesh.github.io/DriveFresh_sumilator',540,1243);
-  x.fillStyle='#ffd31a'; x.font='600 24px '+BODY; x.fillText(d.lbRank ? `Leaderboard rank #${d.lbRank} of ${d.lbPlayers}  ·  Can you beat me?` : 'Be fresh, drive fresh  ·  Can you beat my score?',540,1276);
+  const eb = d.badges || [];
+  if(eb.length){
+    const slot = Math.min(112, 880/eb.length), x0 = 540 - slot*(eb.length-1)/2;
+    eb.forEach((b,i)=>{
+      const cx = x0 + i*slot, r = Math.min(36, slot/2 - 6);
+      x.fillStyle='#06305f'; x.beginPath(); x.arc(cx,1134,r,0,Math.PI*2); x.fill();
+      x.fillStyle='#ffd31a'; x.beginPath(); x.arc(cx,1129,r,0,Math.PI*2); x.fill(); x.lineWidth=4; x.strokeStyle='#06305f'; x.stroke();
+      x.textAlign='center'; x.textBaseline='middle'; x.font=Math.round(r*1.05)+'px sans-serif'; x.fillText(b.icon,cx,1131); x.textBaseline='alphabetic';
+      x.fillStyle='#10263f'; x.font='800 17px '+BODY; x.fillText(b.name,cx,1192,slot-4);
+    });
+  } else { x.textAlign='center'; x.fillStyle='#9aa7b3'; x.font='800 26px '+BODY; x.fillText('No badges this shift. Play again to unlock some!',540,1145); }
+  x.textAlign='center'; x.fillStyle='#5b6f84'; x.font='italic 600 34px '+BODY;
+  wrapText(x, '“'+d.line+'”', 540, 1240, 860, 40, 2);
+  x.fillStyle='#ffffff'; x.font='800 32px '+BODY; x.fillText('Play now: drivefreshsim.in',540,1343);
+  x.fillStyle='#ffd31a'; x.font='600 24px '+BODY; x.fillText(d.lbRank ? `Leaderboard rank #${d.lbRank} of ${d.lbPlayers}  ·  Can you beat me?` : 'Be fresh, drive fresh  ·  Can you beat my score?',540,1376);
   return c;
 }
 $('wa').onclick = async () => {
