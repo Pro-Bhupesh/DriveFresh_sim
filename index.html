@@ -1,4 +1,11 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Toilet Cleaner Simulator - DriveFresh Edition. Inspect and clean BPCL outlet washrooms before the travellers burst in.">
+<meta property="og:title" content="Toilet Cleaner Simulator - DriveFresh Edition">
+<meta property="og:description" content="Can you beat my score? Be fresh, drive fresh!">
 <title>Toilet Cleaner Simulator</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#0a4fa3">
@@ -20,6 +27,9 @@
   color-scheme: light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
 body{
   background:var(--wall);
   background-image:linear-gradient(var(--grout) 1px,transparent 1px),linear-gradient(90deg,var(--grout) 1px,transparent 1px);
@@ -158,6 +168,9 @@ p{margin:0 0 10px;max-width:65ch}
 .share{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
 .wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#08331a;text-decoration:none;border:3px solid #0b6b35;box-shadow:0 4px 0 #0b6b35}
 .wa svg{width:22px;height:22px}
+.cardimg{width:100%;max-width:320px;border-radius:14px;border:3px solid var(--blue);box-shadow:0 4px 0 var(--blue-deep);-webkit-user-select:auto;user-select:auto;-webkit-touch-callout:default}
+.cardnote{font-size:13px;color:var(--muted)}
+.cardnote a{color:var(--blue);font-weight:800}
 @media (max-width:760px){.share>*{flex:1 1 100%}}
 .rank{font-family:var(--display);font-size:clamp(24px,5vw,40px);color:var(--blue);text-shadow:3px 3px 0 var(--yellow);line-height:1.05}
 
@@ -215,6 +228,9 @@ body{-webkit-user-select:none;user-select:none}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 </style>
+</head>
+<body>
+
 
 <div class="app">
   <header class="hud">
@@ -342,9 +358,11 @@ body{-webkit-user-select:none;user-select:none}
       <div class="rank" id="fRank"></div>
       <p class="quote" id="fLine"></p>
       <p id="fSum"></p>
+      <img id="cardImg" class="cardimg" alt="Your score card" hidden>
+      <p id="cardNote" class="cardnote" hidden></p>
       <div class="tablewrap"><table class="report" id="fTable"></table></div>
       <div class="share">
-        <a class="big wa" id="wa" href="https://wa.me/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>Share on WhatsApp</a>
+        <button class="big wa" id="wa" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>Share on WhatsApp</button>
         <button class="ghost" id="copyRes">Copy score</button>
         <button class="big" id="again">Play again</button>
       </div>
@@ -355,7 +373,7 @@ body{-webkit-user-select:none;user-select:none}
 <script>
 (function(){
 const DAY = 540, CLEAN_MIN = 40;
-const GAME_URL = 'https://claude.ai/artifact/VyzRisGqDq41GkKds9jjcA';
+const GAME_URL = 'https://pro-bhupesh.github.io/DriveFresh_sumilator/';
 const OUTLETS = [
   {id:'kittur',  name:'Kittur Rani Fuels',       town:'Belagavi', tag:'NH-48, Kittur',        x:20, y:24},
   {id:'badami',  name:'Badami Caves Fuel Stop',  town:'Bagalkot', tag:'Badami heritage route',x:68, y:29},
@@ -904,7 +922,13 @@ function finalReport(){
   $('fOf').textContent = `out of ${max} · ${Math.round(overall/max*100)}% DriveFresh`;
   $('fBonus').textContent = bonus>0 ? `+${bonus} IoT alert bonus · ${state.total} Fresh points total` : `${certified} of ${OUTLETS.length} toilets certified`;
   const msg = `🚽🧽 I scored ${overall}/${max} in Toilet Cleaner Simulator (DriveFresh Edition)!\nRank: ${rank}\n${certified} of ${OUTLETS.length} toilets DriveFresh certified, ${state.total} Fresh points.\n"${RANK_LINES[rank]}"\nCan you beat me, Sahab? Be fresh, drive fresh! 🌸\n${GAME_URL}`;
-  $('wa').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+  shareData = {msg, file:null};
+  $('cardImg').hidden = true; $('cardNote').hidden = true;
+  $('wa').disabled = false;
+  drawCard({overall, max, rank, line:RANK_LINES[rank], certified, total:state.total}).then(c=>{
+    $('cardImg').src = c.toDataURL('image/png'); $('cardImg').hidden = false;
+    c.toBlob(b=>{ if(b){ shareData.file = new File([b], 'drivefresh-score.png', {type:'image/png'}); shareData.url = URL.createObjectURL(b); } }, 'image/png');
+  });
   $('copyRes').onclick = () => { const b=$('copyRes'); const done=t=>{b.textContent=t; setTimeout(()=>b.textContent='Copy score',1600);}; try{ navigator.clipboard.writeText(msg).then(()=>done('Copied!'),()=>done('Copy blocked')); }catch(e){ done('Copy blocked'); } };
   $('fSum').textContent = `${v.length} of ${OUTLETS.length} toilets inspected · shift ended at ${fmt(Math.min(state.time, DAY))}. ` +
     (cover<1 ? `${OUTLETS.length-v.length} washroom${OUTLETS.length-v.length>1?'s':''} still waiting for you tomorrow.` : 'Every outlet on the route is fresh today.');
@@ -912,6 +936,63 @@ function finalReport(){
     OUTLETS.map(o=>{ const r=state.visited[o.id]; return `<tr><td>${o.name}</td><td>${o.town}</td><td class="n">${r?r.done+'/'+r.total:'–'}</td><td class="n">${r?'★'.repeat(r.stars)+'☆'.repeat(3-r.stars):'Not visited'}</td><td class="n">${r?r.score:0}</td></tr>`; }).join('');
   show('s-final');
 }
+
+/* ---------- score card + share ---------- */
+let shareData = null;
+function rr(x,X,Y,w,h,r){ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); }
+function wrapText(x,text,cx,y,maxW,lh,maxLines){ const words=text.split(' '); const lines=[]; let line=''; for(const w of words){ const t=line?line+' '+w:w; if(x.measureText(t).width>maxW && line){ lines.push(line); line=w; } else line=t; } lines.push(line); lines.slice(0,maxLines).forEach((l,i)=>x.fillText(l,cx,y+i*lh)); }
+async function drawCard(d){
+  try{ await Promise.all(['64px Bungee','800 40px "Baloo 2"','600 34px "Baloo 2"','italic 600 34px "Baloo 2"'].map(f=>document.fonts.load(f))); }catch(e){}
+  const W=1080,H=1350, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  const DISP='Bungee, Impact, sans-serif', BODY='"Baloo 2", "Segoe UI", sans-serif';
+  x.fillStyle='#e3edf4'; x.fillRect(0,0,W,H);
+  x.strokeStyle='#cddde8'; x.lineWidth=3;
+  for(let i=0;i<=W;i+=90){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,H); x.stroke(); }
+  for(let j=0;j<=H;j+=90){ x.beginPath(); x.moveTo(0,j); x.lineTo(W,j); x.stroke(); }
+  x.fillStyle='#06305f'; rr(x,60,74,960,1230,40); x.fill();
+  x.fillStyle='#fff'; rr(x,60,60,960,1230,40); x.fill(); x.lineWidth=8; x.strokeStyle='#0a4fa3'; x.stroke();
+  x.save(); rr(x,60,60,960,1230,40); x.clip();
+  x.fillStyle='#0a4fa3'; x.fillRect(60,60,960,240); x.fillStyle='#ffd31a'; x.fillRect(60,300,960,10);
+  x.fillRect(60,1190,960,10); x.fillStyle='#0a4fa3'; x.fillRect(60,1200,960,90);
+  x.restore();
+  x.textAlign='center'; x.textBaseline='alphabetic';
+  x.fillStyle='#ffd31a'; x.font='72px '+DISP; x.fillText('TOILET CLEANER',540,160); x.fillText('SIMULATOR',540,240);
+  x.fillStyle='#ffffff'; x.font='600 30px '+BODY; x.fillText('DriveFresh Edition  ·  Belgaum Retail Territory',540,284);
+  x.fillStyle='#5b6f84'; x.font='800 32px '+BODY; x.fillText('OVERALL SCORE',540,375);
+  x.font='200px '+DISP; x.fillStyle='#ffd31a'; x.fillText(String(d.overall),548,568); x.fillStyle='#0a4fa3'; x.fillText(String(d.overall),540,560);
+  x.fillStyle='#10263f'; x.font='800 40px '+BODY; x.fillText(`out of ${d.max}  ·  ${Math.round(d.overall/d.max*100)}% DriveFresh`,540,625);
+  x.font='54px '+DISP; const rw=Math.min(900, x.measureText(d.rank).width+80);
+  x.fillStyle='#06305f'; rr(x,540-rw/2,665,rw,96,48); x.fill(); x.fillStyle='#ffd31a'; rr(x,540-rw/2,657,rw,96,48); x.fill();
+  x.fillStyle='#0a4fa3'; x.fillText(d.rank,540,724,860);
+  let y=815;
+  OUTLETS.forEach((o,i)=>{
+    const r=state.visited[o.id];
+    if(i%2===0){ x.fillStyle='#f2f7fd'; x.fillRect(100,y-44,880,60); }
+    x.textAlign='left'; x.fillStyle='#10263f'; x.font='800 32px '+BODY; x.fillText(o.name,120,y);
+    const nw = x.measureText(o.name).width;
+    x.fillStyle='#5b6f84'; x.font='600 24px '+BODY; x.fillText(o.town, 120 + nw + 14, y);
+    x.textAlign='right';
+    if(r){ x.font='42px sans-serif'; const s=[0,1,2].map(k=>k<r.stars?'★':'☆').join(''); x.fillStyle=r.stars>=2?'#e8a700':'#de4336'; x.fillText(s,960,y+4); }
+    else { x.font='800 28px '+BODY; x.fillStyle='#9aa7b3'; x.fillText('Not visited',960,y); }
+    y+=62;
+  });
+  x.textAlign='center'; x.fillStyle='#5b6f84'; x.font='italic 600 34px '+BODY;
+  wrapText(x, '“'+d.line+'”', 540, 1135, 860, 42, 2);
+  x.fillStyle='#ffffff'; x.font='800 32px '+BODY; x.fillText('Play: pro-bhupesh.github.io/DriveFresh_sumilator',540,1243);
+  x.fillStyle='#ffd31a'; x.font='600 24px '+BODY; x.fillText('Be fresh, drive fresh  ·  Can you beat my score?',540,1276);
+  return c;
+}
+$('wa').onclick = async () => {
+  if(!shareData) return;
+  const {msg, file} = shareData;
+  if(file && navigator.canShare && navigator.canShare({files:[file]})){
+    try{ await navigator.share({files:[file], text:msg}); return; }
+    catch(e){ if(e && e.name==='AbortError') return; }
+  }
+  const a=document.createElement('a'); a.href='https://wa.me/?text='+encodeURIComponent(msg); a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
+  const n=$('cardNote'); n.hidden=false;
+  n.innerHTML = 'Your phone did not allow attaching the image directly, so WhatsApp opened with the text. Long-press the score card above to save or share it' + (shareData.url ? ', or <a href="'+shareData.url+'" download="drivefresh-score.png">download the image</a>.' : '.');
+};
 
 /* ---------- boot ---------- */
 $('start').onclick = () => { state = newState(); renderMap(); show('s-map'); tone(523,.12); setTimeout(()=>tone(784,.2),120); };
@@ -925,4 +1006,5 @@ window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.
 })();
 </script>
 
-</body></html>
+</body>
+</html>
