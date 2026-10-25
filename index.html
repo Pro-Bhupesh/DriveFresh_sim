@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Toilet Cleaner Simulator - DriveFresh Edition. Inspect and clean BPCL outlet washrooms before the travellers burst in.">
+<meta name="description" content="Toilet Cleaner Simulator - DriveFresh Edition. Inspect and clean fuel station washrooms across India before the travellers burst in.">
 <meta property="og:title" content="Toilet Cleaner Simulator - DriveFresh Edition">
 <meta property="og:description" content="Can you beat my score? Be fresh, drive fresh!">
 <meta property="og:url" content="https://drivefreshsim.in/">
@@ -62,15 +62,53 @@ p{margin:0 0 10px;max-width:65ch}
 .ghost{background:var(--paper);border:2px solid var(--blue);border-radius:10px;padding:8px 14px;font-weight:700}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
-/* Intro */
-.intro{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:center}
-.intro ol{margin:0 0 14px;padding-left:20px;display:grid;gap:4px}
-.badge{display:inline-block;background:var(--blue);color:var(--yellow);font-family:var(--display);padding:4px 10px;border-radius:8px;font-size:14px;transform:rotate(-2deg)}
-.intro-art{background:var(--blue);border-radius:14px;padding:18px;color:#fff;text-align:center}
-.intro-art .t{font-family:var(--display);color:var(--yellow);font-size:30px;line-height:1}
-.intro-art .s{opacity:.9;font-size:14px;margin-top:6px}
-.intro-art svg{width:100%;max-width:240px;margin:12px auto 0;display:block}
-
+/* Intro / landing */
+body[data-screen="s-intro"] .hud{display:none}
+.hero{position:relative;overflow:hidden;background:var(--blue);border-color:var(--blue-deep);color:#fff;background-image:linear-gradient(rgba(255,255,255,.07) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.07) 2px,transparent 2px);background-size:44px 44px}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10px;background:var(--yellow)}
+.hgrid{display:grid;grid-template-columns:1.1fr 1fr;grid-template-areas:"head art" "body art";column-gap:24px;align-items:center}
+.hhead{grid-area:head;align-self:end}.hart{grid-area:art}.hbody{grid-area:body;align-self:start;display:flex;flex-direction:column;gap:12px;padding-bottom:10px}
+.sticker{display:inline-block;background:var(--yellow);color:var(--blue-deep);font-family:var(--display);font-size:14px;padding:4px 12px;border-radius:8px;transform:rotate(-3deg);box-shadow:0 3px 0 var(--blue-deep)}
+.htitle{font-family:var(--display);font-weight:400;color:var(--yellow);font-size:clamp(38px,7vw,68px);line-height:.95;margin:12px 0 4px;text-shadow:4px 4px 0 var(--blue-deep);text-wrap:balance}
+.tagline{font-family:var(--display);font-size:clamp(18px,3.4vw,24px);margin:0;color:#fff}
+.hsub{margin:0;opacity:.92;font-size:15px;max-width:38ch}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 12px;font-weight:800;font-size:14px}
+.startcard{background:#fff;color:var(--ink);border:3px solid var(--blue-deep);box-shadow:0 5px 0 var(--blue-deep);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px;max-width:420px;width:100%}
+.startcard label{font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.startcard input{font:inherit;font-size:18px;font-weight:700;padding:10px 14px;border:3px solid var(--blue);border-radius:12px;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text;width:100%}
+.startcard input:focus{outline:3px solid var(--yellow);outline-offset:1px}
+.startcard .err{color:var(--bad);font-size:13px;font-weight:700;min-height:0}
+.startcard .err:empty{display:none}
+.startcard .big{width:100%;font-size:20px;padding:12px}
+.hlinks{display:flex;max-width:420px;width:100%}
+.hlink{flex:1;text-align:center;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.55);border-radius:12px;padding:10px 14px;font-weight:800;font-size:16px}
+.hlink:hover{background:rgba(255,255,255,.12)}
+.leader{margin:0;font-weight:700;font-size:14px;color:var(--yellow)}
+.htop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:2}
+.hctl{display:flex;gap:6px}
+.hbtn.hlb{background:var(--yellow);border-color:var(--blue-deep);box-shadow:0 3px 0 var(--blue-deep);font-size:19px}
+.hbtn{width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.5);background:rgba(6,48,95,.5);color:#fff;font-size:17px;display:grid;place-items:center;padding:0}
+.scene{display:block;width:100%;max-width:400px;margin:0 auto;overflow:visible}
+.scene .smell path{fill:none;stroke:#8fd14f;stroke-width:4;stroke-linecap:round;animation:smellFade 3.2s ease-in-out infinite}
+.scene .sponge{animation:scrub 1.1s ease-in-out infinite alternate}
+.scene .spark{transform-box:fill-box;transform-origin:center;animation:twinkle 1.6s ease-in-out infinite}
+.scene .s2{animation-delay:.5s}.scene .s3{animation-delay:1s}
+.scene .roach{animation:roachRun 6s linear infinite}
+@keyframes scrub{from{transform:translate(78px,92px) rotate(-8deg)}to{transform:translate(132px,90px) rotate(8deg)}}
+@keyframes smellFade{0%,15%{opacity:.9;transform:translateY(0)}60%,100%{opacity:0;transform:translateY(-14px)}}
+@keyframes twinkle{0%,100%{transform:scale(.4);opacity:.3}50%{transform:scale(1.15);opacity:1}}
+@keyframes roachRun{0%{transform:translate(-30px,168px)}40%{transform:translate(250px,168px)}40.01%,100%{transform:translate(260px,168px)}}
+@media (max-width:760px){
+  .hgrid{grid-template-columns:1fr;grid-template-areas:"head" "art" "body"}
+  .htitle{font-size:clamp(34px,10.5vw,52px);margin-top:10px}
+  .scene{max-width:250px;margin:4px auto 0}
+  .hbody{gap:10px}
+  .startcard{max-width:none}
+  .hlinks{max-width:none}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .step{padding:3px 4px;font-size:13px;text-align:center;white-space:nowrap}
+}
 /* Map */
 .mapgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
 .mapbox{border:2px solid var(--blue);border-radius:12px;overflow:hidden;min-width:0;background:var(--land)}
@@ -78,7 +116,7 @@ p{margin:0 0 10px;max-width:65ch}
 .mapsvg .river{fill:none;stroke:#7fbfe6;stroke-width:1.4;stroke-linecap:round}
 .mapsvg .road{stroke:var(--road);stroke-width:.9;stroke-linecap:round}
 .mapsvg .nh{stroke:#7a8794;stroke-width:1.6}
-.mapsvg .dist{font-family:var(--display);font-size:4.2px;fill:#0a4fa3;opacity:.13}
+.mapsvg .dist{font-family:var(--display);font-size:3.4px;fill:#0a4fa3;opacity:.22}
 .mapsvg .lbl{font-family:var(--body);font-weight:800;font-size:2.5px;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:.7px}
 .mapsvg .pin{cursor:pointer}
 .mapsvg .pin:focus{outline:none}
@@ -221,6 +259,30 @@ p{margin:0 0 10px;max-width:65ch}
 @keyframes tBub{0%,30%{opacity:0;transform:none}40%{opacity:1}55%{opacity:0;transform:translate(6px,-18px) scale(1.4)}56%{opacity:0;transform:none}62%{opacity:1}74%,100%{opacity:0;transform:translate(-6px,-18px) scale(1.4)}}
 .tutsteps{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
 @media (prefers-reduced-motion:reduce){.tfinger{left:56%;top:54%}.tstain{opacity:.5}}
+/* ceremony */
+.cerstage{position:relative;width:100%;aspect-ratio:16/10;max-height:60dvh;border-radius:14px;overflow:hidden;border:3px solid var(--blue-deep);background:radial-gradient(ellipse at 50% 0%,#3a2a6b,#120c2b 70%);margin-bottom:12px}
+.cerstage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
+.spot{position:absolute;left:50%;top:-20%;width:70%;height:140%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 85%,rgba(255,240,170,.55),rgba(255,240,170,0) 60%);opacity:0;transition:opacity .8s}
+.cerstage.lit .spot{opacity:1}
+.curtain{position:absolute;top:0;bottom:0;width:51%;z-index:5;background:repeating-linear-gradient(90deg,#9b1c26 0 18px,#7d1420 18px 30px);box-shadow:inset 0 -30px 40px rgba(0,0,0,.35);transition:transform 1.4s cubic-bezier(.6,0,.3,1)}
+.curtain.l{left:0;border-right:4px solid #ffd31a}.curtain.r{right:0;border-left:4px solid #ffd31a}
+.cerstage.open .curtain.l{transform:translateX(-96%)}.cerstage.open .curtain.r{transform:translateX(96%)}
+.cerbanner{position:absolute;left:50%;top:6%;transform:translateX(-50%);z-index:4;background:#ffd31a;color:var(--blue-deep);font-family:var(--display);font-size:clamp(11px,2.6vw,18px);padding:4px 14px;border-radius:6px;white-space:nowrap;box-shadow:0 3px 0 #b8900a}
+.trophy{position:absolute;left:50%;top:22%;transform:translate(-50%,-260%);font-size:clamp(48px,11vw,88px);z-index:3;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5));transition:transform .9s cubic-bezier(.3,1.6,.5,1)}
+.cerstage.open .trophy{transform:translate(-50%,0)}
+.podium{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);z-index:3;background:linear-gradient(#ffe066,#e8b400);color:var(--blue-deep);font-family:var(--display);font-size:clamp(14px,3.4vw,24px);padding:10px 22px 14px;border-radius:8px 8px 0 0;min-width:46%;text-align:center;box-shadow:0 6px 0 #a87f00;opacity:0;transition:opacity .5s .6s}
+.cerstage.open .podium{opacity:1}
+.crowd{position:absolute;left:0;right:0;bottom:2%;z-index:3;text-align:center;font-size:clamp(18px,4.6vw,30px);letter-spacing:4px;opacity:0;transition:opacity .4s .9s}
+.cerstage.open .crowd{opacity:1;animation:clap .35s ease-in-out infinite alternate 1.2s}
+@keyframes clap{to{transform:translateY(-4px)}}
+.cerstage.shame{background:radial-gradient(ellipse at 50% 0%,#55606b,#1e252c 70%)}
+.cerstage.shame .curtain{background:repeating-linear-gradient(90deg,#4a5058 0 18px,#3a3f46 18px 30px)}
+.cerstage.shame .cerbanner{background:#9aa7b3;color:#1e252c;box-shadow:0 3px 0 #5b6f84}
+.cerstage.shame .podium{background:linear-gradient(#a9b3bc,#7d8994);box-shadow:0 6px 0 #4f5a64;color:#1e252c}
+.cerstage.shame .spot{background:radial-gradient(ellipse at 50% 85%,rgba(160,220,120,.35),rgba(160,220,120,0) 60%)}
+.cerstage.shame.open .trophy{transform:translate(-50%,0) rotate(-18deg)}
+.cerline{font-family:var(--display);font-size:clamp(16px,3.6vw,22px);color:var(--blue);min-height:2.6em;text-wrap:balance}
+.cerpresenter{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .playerchip{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .report{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:420px}
 .report th,.report td{padding:8px;border-bottom:1px solid var(--grout);text-align:left}
@@ -299,7 +361,7 @@ body{-webkit-user-select:none;user-select:none}
 
 <div class="app">
   <header class="hud">
-    <h1 class="logo">Toilet Cleaner Simulator<small>DriveFresh Edition · Belgaum Retail Territory</small></h1>
+    <h1 class="logo">Toilet Cleaner Simulator<small>DriveFresh Edition · All-India Tour</small></h1>
     <div class="chips">
       <div class="chip playerchip" id="playerChip" hidden></div>
       <div class="chip"><span>Shift</span><b id="clock">9:00 AM</b></div>
@@ -310,37 +372,54 @@ body{-webkit-user-select:none;user-select:none}
   </header>
 
   <!-- INTRO -->
-  <section class="screen" id="s-intro">
-    <div class="intro">
-      <div>
-        <div class="eyebrow">Mission brief</div>
-        <h2>Sahab, the washrooms need you.</h2>
-        <p>You are the Sales Officer. Under <b>DriveFresh</b>, every BPCL outlet on your route promises a clean, safe, hygienic washroom. Today you tour Belagavi, Dharwad, Haveri, Gadag and Bagalkot. If a toilet fails inspection, there is no time to write a letter. Roll up your sleeves.</p>
-        <ol>
-          <li>Pick outlets on the map. The DriveFresh <b>odour sensor</b> tells you which ones stink.</li>
-          <li>Driving costs shift time. Your day ends at 6 PM.</li>
-          <li>In the washroom, pick the right tool and <b>scrub, mop and tap</b> every problem before the travellers burst in.</li>
-          <li>Clean fast for bonus points. Keys 1 to 8 switch tools.</li>
-        </ol>
-        <form class="namebox" id="nameForm" novalidate>
-          <label for="pname">Your name, Sahab</label>
-          <input id="pname" name="pname" type="text" maxlength="30" autocomplete="name" placeholder="e.g. Ravi Kulkarni" required>
-          <span class="err" id="nameErr"></span>
-        </form>
-        <div class="row"><button class="big" id="start">Start shift</button><button class="ghost" id="boardBtn" type="button">Leaderboard</button><button class="ghost" id="howBtn" type="button">How to play</button><span class="badge">Be fresh, drive fresh</span></div>
+  <section class="screen hero" id="s-intro">
+    <div class="htop">
+      <button type="button" class="hbtn hlb" id="boardBtn" aria-label="Leaderboard" title="Leaderboard">🏆</button>
+      <div class="hctl">
+        <button type="button" class="hbtn" id="hMute" aria-label="Toggle sound" title="Sound">🔊</button>
+        <button type="button" class="hbtn" id="hFs" aria-label="Full screen" title="Full screen">⛶</button>
       </div>
-      <div class="intro-art">
-        <div class="t">DRIVE FRESH</div>
-        <div class="s">5 toilets · 1 Sales Officer · 0 excuses</div>
-        <svg viewBox="0 0 120 90" aria-hidden="true">
-          <rect x="10" y="60" width="100" height="6" rx="3" fill="#06305f"/>
-          <path d="M40 30 Q40 58 52 60 H68 Q80 58 80 30Z" fill="#fff"/>
-          <ellipse cx="60" cy="30" rx="21" ry="6" fill="#e9f2f8" stroke="#9fb1bf"/>
-          <rect x="46" y="8" width="28" height="16" rx="3" fill="#fff"/>
-          <g fill="#ffd31a"><path d="M20 20 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/><path d="M95 12 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/><path d="M100 44 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6z"/></g>
-          <rect x="84" y="26" width="4" height="34" rx="2" fill="#ffd31a" transform="rotate(20 86 43)"/>
-          <ellipse cx="93" cy="58" rx="7" ry="4" fill="#ffd31a" transform="rotate(20 93 58)"/>
+    </div>
+    <div class="hgrid">
+      <div class="hhead">
+        <span class="sticker">DriveFresh Edition</span>
+        <h1 class="htitle">Toilet Cleaner Simulator</h1>
+      </div>
+      <div class="hart" aria-hidden="true">
+        <svg viewBox="0 0 220 180" class="scene">
+          <ellipse cx="110" cy="160" rx="78" ry="10" fill="#06305f" opacity=".45"/>
+          <rect x="148" y="18" width="52" height="40" rx="5" fill="#ffd31a"/>
+          <text x="174" y="35" text-anchor="middle" font-family="Bungee, Impact, sans-serif" font-size="10" fill="#06305f">DRIVE</text>
+          <text x="174" y="48" text-anchor="middle" font-family="Bungee, Impact, sans-serif" font-size="10" fill="#06305f">FRESH</text>
+          <rect x="66" y="22" width="76" height="44" rx="8" fill="#fff" stroke="#06305f" stroke-width="4"/>
+          <rect x="96" y="16" width="18" height="8" rx="3" fill="#cfe0ec" stroke="#06305f" stroke-width="3"/>
+          <path d="M54 78 H156 L160 94 H50Z" fill="#eaf3f9" stroke="#06305f" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M52 94 Q52 140 80 148 H130 Q158 140 158 94Z" fill="#fff" stroke="#06305f" stroke-width="4" stroke-linejoin="round"/>
+          <ellipse cx="105" cy="96" rx="40" ry="8" fill="#d7e8f3"/>
+          <rect x="84" y="146" width="42" height="12" rx="3" fill="#fff" stroke="#06305f" stroke-width="4"/>
+          <g class="smell"><path d="M70 70 C60 56 80 50 70 36" /><path d="M140 70 C130 56 150 50 140 36"/></g>
+          <g class="sponge"><rect x="-16" y="-10" width="32" height="20" rx="5" fill="#ffd31a" stroke="#06305f" stroke-width="3"/><rect x="-16" y="4" width="32" height="6" rx="2" fill="#16a35f"/>
+            <circle cx="-14" cy="-14" r="5" fill="#fff" stroke="#a9d3ea"/><circle cx="6" cy="-18" r="4" fill="#fff" stroke="#a9d3ea"/><circle cx="18" cy="-10" r="3" fill="#fff" stroke="#a9d3ea"/></g>
+          <g class="spark s1"><path d="M30 40 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4z" fill="#ffd31a"/></g>
+          <g class="spark s2"><path d="M188 92 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#fff"/></g>
+          <g class="spark s3"><path d="M40 118 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5z" fill="#fff"/></g>
+          <g class="roach"><ellipse cx="0" cy="0" rx="9" ry="5" fill="#6b3a17"/><circle cx="9" cy="0" r="3.4" fill="#4a2810"/><path d="M-4 -4 l-4 -5 M2 -4 l2 -6 M-4 4 l-4 5 M2 4 l2 6 M11 -2 l6 -4 M11 2 l6 4" stroke="#3b2210" stroke-width="1.6" stroke-linecap="round"/></g>
         </svg>
+      </div>
+      <div class="hbody">
+        <p class="tagline">5 toilets. 1 shift. 0 excuses.</p>
+        <p class="hsub">Race across India's highway outlets and scrub every washroom before the travellers burst in.</p>
+        <div class="steps"><span class="step">📡 Sniff</span><span class="step">🚙 Drive</span><span class="step">🧽 Scrub</span><span class="step">🏆 Win</span></div>
+        <form class="startcard" id="nameForm" novalidate>
+          <label for="pname">Your name, Sahab</label>
+          <input id="pname" name="pname" type="text" maxlength="30" autocomplete="name" placeholder="Enter your name" required>
+          <span class="err" id="nameErr"></span>
+          <button class="big" id="start" type="button">Start shift ▶</button>
+        </form>
+        <div class="hlinks">
+          <button class="hlink" id="howBtn" type="button">❓ How to play</button>
+        </div>
+        <p class="leader" id="leaderLine" hidden></p>
       </div>
     </div>
   </section>
@@ -348,7 +427,7 @@ body{-webkit-user-select:none;user-select:none}
   <!-- MAP -->
   <section class="screen" id="s-map" hidden>
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <div><div class="eyebrow">Territory map</div><h2 style="margin:0">Where to next, Sahab?</h2></div>
+      <div><div class="eyebrow">All-India route map</div><h2 style="margin:0">Where to next, Sahab?</h2></div>
       <button class="ghost" id="endday">End shift</button>
     </div>
     <div id="mapBanner"></div>
@@ -435,6 +514,25 @@ body{-webkit-user-select:none;user-select:none}
     </div>
   </section>
 
+  <!-- CEREMONY -->
+  <section class="screen" id="s-cer" hidden>
+    <div class="center" style="max-width:720px">
+      <div class="cerstage" id="cerStage">
+        <div class="spot"></div>
+        <div class="cerbanner" id="cerBanner"></div>
+        <div class="trophy" id="cerTrophy">🏆</div>
+        <div class="podium" id="cerName"></div>
+        <div class="crowd" id="cerCrowd"></div>
+        <div class="curtain l"></div><div class="curtain r"></div>
+        <canvas id="cerFx"></canvas>
+      </div>
+      <div class="cerpresenter" id="cerBy"></div>
+      <p class="cerline" id="cerLine"></p>
+      <p class="quote" id="cerSpeech" hidden></p>
+      <button class="big" id="cerGo" disabled>Please wait…</button>
+    </div>
+  </section>
+
   <!-- FINAL -->
   <section class="screen" id="s-final" hidden>
     <div class="center" style="max-width:720px">
@@ -493,14 +591,14 @@ const GAME_URL = 'https://drivefreshsim.in/';
 const SCOREBOARD_URL = 'https://script.google.com/macros/s/AKfycbyKLOpzJAzHuepHyltQEDYzIJfy7HgKLMkNlNvcxcQHkuv3H_Q9yEtxh3MNig0lcC3P/exec';
 const boardOn = () => /^https:\/\/script\.google(usercontent)?\.com\//.test(SCOREBOARD_URL);
 const OUTLETS = [
-  {id:'kittur',  name:'Kittur Rani Fuels',       town:'Belagavi', tag:'NH-48, Kittur',        x:20, y:24},
-  {id:'badami',  name:'Badami Caves Fuel Stop',  town:'Bagalkot', tag:'Badami heritage route',x:68, y:29},
-  {id:'peda',    name:'Peda Nagari Petroleum',   town:'Dharwad',  tag:'Dharwad city',         x:29, y:40},
-  {id:'lakkundi',name:'Lakkundi Heritage Fuels', town:'Gadag',    tag:'Lakkundi temples route',x:73, y:47},
-  {id:'elakki',  name:'Elakki Highway Fuels',    town:'Haveri',   tag:'NH-48, Haveri',        x:50, y:65},
+  {id:'manali',   name:'Rohtang Pass Fuels',  town:'Himachal Pradesh', tag:'Manali–Leh highway',          x:33.9, y:20.9},
+  {id:'kutch',    name:'Rann Utsav Fuels',    town:'Gujarat',          tag:'White Rann route, Kutch',     x:11.1, y:48.0},
+  {id:'kaziranga',name:'Rhino Point Fuels',   town:'Assam',            tag:'Kaziranga National Park route',x:83.0, y:38.0},
+  {id:'kanha',    name:'Tiger Trail Fuels',   town:'Madhya Pradesh',   tag:'Kanha National Park route',   x:44.2, y:50.8},
+  {id:'munnar',   name:'Tea Valley Fuels',    town:'Kerala',           tag:'Munnar ghat road',            x:33.5, y:87.7},
 ];
-const OFFICE = {id:'office', name:'Territory Office', x:38, y:44};
-const ROADS = [['kittur','office',1],['office','elakki',1],['kittur','badami'],['office','peda'],['office','lakkundi'],['lakkundi','badami'],['elakki','lakkundi'],['peda','kittur']];
+const OFFICE = {id:'office', name:'Zonal Office', x:39.7, y:54.5};
+const ROADS = [['office','manali',1],['office','munnar',1],['office','kanha'],['office','kutch'],['kanha','kaziranga'],['manali','kutch'],['kutch','munnar'],['manali','kaziranga']];
 const byId = id => id==='office'?OFFICE:OUTLETS.find(o=>o.id===id);
 
 const TOOLS = {
@@ -678,7 +776,7 @@ function S(){ if(!state.stats) state.stats = {roach:0, smell:0, bulb:0, wrong:0,
 function checkBadges(){ S(); const fresh = []; BADGES.forEach(b=>{ if(!state.badges.includes(b.id) && BADGE_TESTS[b.id](state)){ state.badges.push(b.id); fresh.push(b); } }); return fresh; }
 const earnedBadges = () => BADGES.filter(b => (state.badges||[]).includes(b.id));
 const RANK_LINES = {
-  'Swachhata Samrat':'The TM wants to frame your photo in the territory office. Next to the fire extinguisher.',
+  'Swachhata Samrat':'The boss wants to frame your photo in the zonal office. Next to the fire extinguisher.',
   'DriveFresh Champion':'Dealers now hide when they see your jeep. That is respect.',
   'Mop Apprentice':'Good effort. The cockroaches are still talking about you. Mostly laughing.',
   'Refresher training booked':'HR has booked a 3-day refresher at Mumbai HQ. Topic: Which end of the mop to hold.',
@@ -689,7 +787,7 @@ const rnd = (a,b) => a + Math.random()*(b-a);
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 const dist = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
-const travelMin = (a,b) => Math.round(8 + dist(a,b)*1.8);
+const travelMin = (a,b) => Math.round(8 + dist(a,b)*1.2);
 const fmt = m => { const t = 9*60 + Math.round(m); let h = Math.floor(t/60), mm = t%60; const ap = h>=12?'PM':'AM'; h = h>12?h-12:h; return h+':'+String(mm).padStart(2,'0')+' '+ap; };
 const odourColor = v => v<25?'var(--good)':v<55?'var(--warn)':'var(--bad)';
 
@@ -722,17 +820,18 @@ function newState(){
   return {started:true, player: playerName(), gameId: Date.now().toString(36)+Math.random().toString(36).slice(2,8), submitted:false, lb:null, stats:{roach:0, smell:0, bulb:0, wrong:0, bestCombo:0, fastest:null}, badges:[], time:0, pos:{x:OFFICE.x,y:OFFICE.y}, at:'office', total:0, visited:{}, out, mods:{chai:0, rain:false, alert:null, fresh:false}, sel:null};
 }
 function hud(){ $('clock').textContent = fmt(state?state.time:0); $('pts').textContent = state?state.total:0; }
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.hidden = s.id!==id); window.scrollTo({top:0,behavior:'smooth'}); }
+function show(id){ document.body.dataset.screen = id; document.querySelectorAll('.screen').forEach(s=>s.hidden = s.id!==id); window.scrollTo({top:0,behavior:'smooth'}); }
 
 /* ---------- map ---------- */
 function mapSVG(){
-  let s = `<svg viewBox="0 0 100 72" class="mapsvg" role="img" aria-label="Map of the territory and its outlets">`;
-  s += `<rect width="100" height="72" fill="var(--land)"/>`;
-  s += `<path class="river" d="M52 2 C62 6 70 9 80 11.5 S94 15 100 17"/><path class="river" d="M10 28 C22 32 36 27 48 31 S62 35 74 25"/>`;
-  s += `<text class="dist" x="4" y="34">BELAGAVI</text><text class="dist" x="70" y="22">BAGALKOT</text><text class="dist" x="16" y="56">DHARWAD</text><text class="dist" x="76" y="60">GADAG</text><text class="dist" x="56" y="71">HAVERI</text>`;
+  let s = `<svg viewBox="0 0 100 100" class="mapsvg" role="img" aria-label="Map of India with the five outlets">`;
+  s += `<rect width="100" height="100" fill="#d7ecf7"/>`;
+  s += `<path d="M25.7 6.6 L33.3 11.1 L39.4 14.1 L37.9 20.2 L42.4 26.2 L45.4 27.7 L54.6 32.2 L66.7 35.2 L67.3 38.2 L72.2 38.8 L78.8 36.7 L87.9 33.1 L94.0 35.2 L91.0 39.8 L86.4 44.3 L83.4 48.8 L80.3 51.8 L78.2 48.8 L77.3 44.3 L72.8 42.2 L69.7 40.4 L68.2 44.3 L69.1 51.8 L63.7 53.3 L63.0 56.3 L57.6 59.3 L54.6 63.0 L49.4 66.9 L45.4 69.9 L43.3 71.4 L43.0 77.4 L41.8 83.5 L41.8 87.1 L37.9 91.0 L34.8 93.7 L32.1 91.3 L30.3 86.5 L28.2 81.9 L26.0 75.9 L23.6 71.4 L21.8 65.4 L20.6 60.8 L20.6 54.8 L19.7 52.4 L13.6 55.4 L9.0 50.9 L6.9 47.3 L12.1 44.9 L13.6 40.7 L10.9 36.7 L15.1 33.7 L19.7 27.7 L24.2 24.7 L25.7 20.2 L23.6 15.6Z" fill="var(--land)" stroke="#8fb39b" stroke-width=".5" stroke-linejoin="round"/>`;
+  s += `<path class="river" d="M37.0 27.1 L40.9 33.7 L45.4 38.5 L51.5 41.6 L59.1 41.3 L64.6 42.5 L67.3 45.2 L68.5 50.6"/><path class="river" d="M89.8 34.0 L85.5 36.4 L80.6 37.6 L75.8 39.2 L72.2 40.1"/><path class="river" d="M47.3 49.7 L40.9 48.8 L34.8 50.0 L28.8 51.2 L22.1 52.4"/>`;
+  s += `<text class="dist" x="3" y="80">ARABIAN SEA</text><text class="dist" x="62" y="78">BAY OF BENGAL</text><text class="dist" x="38" y="70" style="opacity:.12;font-size:6px">INDIA</text>`;
   ROADS.forEach(([a,b,nh])=>{ const A=byId(a),B=byId(b); s+=`<line class="road${nh?' nh':''}" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`; });
-  s += `<text class="lbl" x="33" y="33" style="font-size:2px;fill:#5b6f84">NH-48</text>`;
-  s += `<g><rect x="${OFFICE.x-2}" y="${OFFICE.y-2}" width="4" height="4" rx=".6" fill="var(--blue)"/><text class="lbl" x="${OFFICE.x}" y="${OFFICE.y+5}" text-anchor="middle" style="font-size:2.1px">Office</text></g>`;
+  s += `<text class="lbl" x="${OFFICE.x-9}" y="${OFFICE.y-12}" style="font-size:2.2px;fill:#5b6f84">NH-44</text>`;
+  s += `<g><rect x="${OFFICE.x-2}" y="${OFFICE.y-2}" width="4" height="4" rx=".6" fill="var(--blue)"/><text class="lbl" x="${OFFICE.x-3}" y="${OFFICE.y+3.2}" text-anchor="end" style="font-size:2.1px">Zonal Office</text></g>`;
   OUTLETS.forEach(o=>{
     const v = state.visited[o.id], od = state.out[o.id].odour, alert = state.mods.alert===o.id && !v;
     s += `<g class="pin${state.sel===o.id?' sel':''}" data-id="${o.id}" tabindex="0" role="button" aria-label="${o.name}">`;
@@ -741,7 +840,7 @@ function mapSVG(){
     s += `<circle class="core" cx="${o.x}" cy="${o.y}" r="2.6" fill="${v?'var(--good)':'var(--yellow)'}" stroke="var(--blue-deep)" stroke-width=".6"/>`;
     if(v) s += `<path d="M${o.x-1.1} ${o.y} l.8 .9 1.6-1.9" fill="none" stroke="#fff" stroke-width=".6"/>`;
     else s += `<circle cx="${o.x}" cy="${o.y}" r=".9" fill="${odourColor(od)}"/>`;
-    s += `<text class="lbl" x="${o.x}" y="${o.y+5.4}" text-anchor="middle">${o.name.split(' ').slice(0,2).join(' ')}</text></g>`;
+    s += `<text class="lbl" x="${o.x}" y="${o.y+5.4}" text-anchor="middle">${o.name.split(' ').slice(0,2).join(' ')}</text><text class="lbl" x="${o.x}" y="${o.y+8.2}" text-anchor="middle" style="font-size:2px;font-weight:600;fill:#5b6f84">${o.town}</text></g>`;
   });
   s += `<g id="jeep" transform="translate(${state.pos.x} ${state.pos.y})"><rect x="-3" y="-3.6" width="6" height="3" rx=".8" fill="var(--blue)" stroke="#fff" stroke-width=".3"/><rect x="-3" y="-2.4" width="6" height=".6" fill="var(--yellow)"/><circle cx="-1.8" cy="-.5" r=".8" fill="#222"/><circle cx="1.8" cy="-.5" r=".8" fill="#222"/></g>`;
   return s + `</svg>`;
@@ -768,7 +867,7 @@ $('mapbox').addEventListener('click', e=>{ const g = e.target.closest('.pin'); i
 $('mapbox').addEventListener('keydown', e=>{ const g = e.target.closest('.pin'); if(g && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); selectOutlet(g.dataset.id); }});
 $('list').addEventListener('click', e=>{ const b = e.target.closest('[data-go]'); if(b){ drive(b.dataset.go); return; } const c = e.target.closest('[data-card]'); if(c){ state.sel=c.dataset.card; renderMap(); }});
 function selectOutlet(id){ state.sel=id; renderMap(); const c = document.querySelector(`[data-card="${id}"]`); if(c) c.scrollIntoView({block:'nearest',behavior:'smooth'}); }
-$('endday').onclick = finalReport;
+$('endday').onclick = () => endShift();
 
 function drive(id){
   const o = byId(id), from = {...state.pos}, t = travelMin(from,o);
@@ -789,7 +888,7 @@ function drive(id){
 function roadEvent(nextId){
   const pending = OUTLETS.filter(o=>!state.visited[o.id] && o.id!==nextId && state.mods.alert!==o.id);
   const evs = [
-    {i:'🚛', t:'Lorry jam on the bypass', d:'A row of tankers is parked across the road. You lose 20 minutes.', f:()=>{state.time+=20;}},
+    {i:'🚛', t:'Lorry jam on the highway', d:'A row of tankers is parked across the road. You lose 20 minutes.', f:()=>{state.time+=20;}},
     {i:'☕', t:'The dealer sent masala chai', d:'Energy up. You get 8 extra seconds in the next washroom.', f:()=>{state.mods.chai+=1;}},
     {i:'🌧️', t:'Sudden monsoon shower', d:'Muddy shoes everywhere. Expect extra puddles at the next stop.', f:()=>{state.mods.rain=true;}},
     {i:'🛣️', t:'Empty highway', d:'Smooth road, no traffic. You save 10 minutes.', f:()=>{state.time=Math.max(0,state.time-10);}},
@@ -807,7 +906,7 @@ function arrive(id){
   const o = byId(id), lv = state.out[id].level;
   $('arSign').innerHTML = `${o.name}<small>BPCL · ${o.tag}</small>`;
   $('arLine').textContent = lv===0 ? pick(DEALER_CLEAN) : pick(DEALER_DIRTY);
-  $('arNote').textContent = pick(ARRIVE_NOTE).replace('{r}', o.tag.replace(/^NH-48, /,''));
+  $('arNote').textContent = pick(ARRIVE_NOTE).replace('{r}', o.tag);
   $('arGo').onclick = () => startRoom(id);
   show('s-arrive');
 }
@@ -1055,10 +1154,103 @@ function finishRoom(allDone){
   $('reQuote').textContent = `Traveller says: "${q[0]}"`;
   const anyLeft = OUTLETS.some(o=>!state.visited[o.id] && state.time + travelMin(state.pos,o) + CLEAN_MIN <= DAY);
   $('reGo').textContent = anyLeft ? 'Back to the map' : 'File the day report';
-  $('reGo').onclick = anyLeft ? ()=>{ renderMap(); show('s-map'); } : finalReport;
+  $('reGo').onclick = anyLeft ? ()=>{ renderMap(); show('s-map'); } : endShift;
   room = null;
   tone(allDone?784:220, .3, 'triangle', .05);
   show('s-result');
+}
+
+/* ---------- ceremony ---------- */
+const overallScore = () => OUTLETS.reduce((a,o)=>a+(state.visited[o.id]?Math.min(100,state.visited[o.id].score):0),0);
+const AWARD = {
+  gold: {
+    banner:'DriveFresh Swachhata Awards 2026', trophy:'🏆', crowd:'👏🙌🎉👏📸👏🎉🙌👏',
+    by:['Presented by the Chief Guest, Shri Phenyl Sharma','Presented by Ms. Harpreet "Harpic" Kaur, Chairperson, Clean Highways Council','Presented by the Hon. Minister of Mops (fictional)'],
+    line:['And the award for the Cleanest Toilets on Indian Highways goes to…','And the Golden Mop for Outstanding Swachhata goes to…','For services to noses across the nation, the award goes to…'],
+    go:'Accept the award', speeches:[
+      'I would like to thank my mop, my bucket, and the cockroach who taught me speed.',
+      'This award belongs to every traveller who held it in for 40 kilometres.',
+      'I dedicate this to my mother, who still thinks I sell petrol.',
+      'Freshener, you were the real hero. I was just holding you.',
+      'To the dealer who said "small-small issues only": we did it, sir. Somehow.',
+    ]},
+  shame: {
+    banner:'Hall of Shame 2026', trophy:'🪠', crowd:'🪳😬🪳🍅🪳😷🪳🍅🪳',
+    by:['Presented by Raju the Cockroach, on behalf of all cockroaches','Presented by the Smell Cloud, who has never been happier','Presented by the cleaning boy, fresh back from his chai break'],
+    line:['And the Rusty Plunger for the Smelliest Shift goes to…','The award for "Most Toilets Left Exactly As Found" goes to…','For outstanding services to cockroaches, the plunger goes to…'],
+    go:'Accept… shamefully', speeches:[
+      'I would like to thank the cleaning boy who went for chai at 9 AM. We did this together.',
+      'In my defence, the cockroach had seniority.',
+      'Nobody told me the job description included toilets. I thought it was mostly chai.',
+      'I will be in refresher training. Please do not visit me.',
+      'The smell and I have reached an understanding. It stays. I leave.',
+    ]},
+};
+let fxRun = 0;
+function noiseBurst(dur, freq, vol, delay){
+  if(muted) return; try{
+    ac = ac || new (window.AudioContext||window.webkitAudioContext)();
+    const t = ac.currentTime + (delay||0), n = Math.floor(ac.sampleRate*dur), buf = ac.createBuffer(1,n,ac.sampleRate), d = buf.getChannelData(0);
+    for(let i=0;i<n;i++) d[i] = (Math.random()*2-1) * (1 - i/n);
+    const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    src.buffer = buf; f.type='bandpass'; f.frequency.value=freq; f.Q.value=.8; g.gain.value=vol;
+    src.connect(f).connect(g).connect(ac.destination); src.start(t);
+  }catch(e){}
+}
+function toneAt(f,d,type,v,delay){ setTimeout(()=>tone(f,d,type,v), (delay||0)*1000); }
+const drumroll = () => { for(let i=0;i<34;i++) noiseBurst(.06, 180, .25, i*.05); noiseBurst(.4, 120, .5, 1.75); };
+const fanfare = () => { [523,659,784,1046].forEach((f,i)=>toneAt(f,.25,'triangle',.07,i*.14)); toneAt(1046,.6,'triangle',.07,.62); toneAt(1318,.6,'triangle',.05,.62); };
+const applause = () => { for(let i=0;i<70;i++) noiseBurst(.05, 1500+Math.random()*2500, .12, Math.random()*2.6); };
+const sadTrombone = () => { [392,370,349].forEach((f,i)=>toneAt(f,.45,'sawtooth',.04,i*.5)); toneAt(330,1.2,'sawtooth',.04,1.5); };
+function runFx(kind){
+  const cv = $('cerFx'), run = ++fxRun; const r = cv.getBoundingClientRect(); cv.width = r.width*2; cv.height = r.height*2;
+  const x = cv.getContext('2d'); x.scale(2,2);
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cols = ['#ffd31a','#ffffff','#16a35f','#de4336','#4aa3ff','#ff8ad4'];
+  const emo = ['🪳','🍅','🪳','💩','🪰'];
+  const parts = Array.from({length: kind==='gold'?140:34}, ()=>({x:Math.random()*r.width, y:-20-Math.random()*r.height, vx:(Math.random()-.5)*1.2, vy:1+Math.random()*2.2, rot:Math.random()*6, vr:(Math.random()-.5)*.2, c:cols[Math.floor(Math.random()*cols.length)], e:emo[Math.floor(Math.random()*emo.length)], s:4+Math.random()*5}));
+  const t0 = performance.now();
+  (function frame(n){
+    if(run!==fxRun) return;
+    x.clearRect(0,0,r.width,r.height);
+    parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; if(p.y>r.height+20 && n-t0<5000){ p.y=-20; p.x=Math.random()*r.width; }
+      x.save(); x.translate(p.x,p.y); x.rotate(p.rot);
+      if(kind==='gold'){ x.fillStyle=p.c; x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); } else { x.font='18px sans-serif'; x.fillText(p.e,-9,6); }
+      x.restore(); });
+    if(n-t0<9000) requestAnimationFrame(frame); else x.clearRect(0,0,r.width,r.height);
+  })(t0);
+}
+function typeLine(el, text, ms, done){ el.textContent=''; let i=0; const h=setInterval(()=>{ el.textContent = text.slice(0, ++i); if(i>=text.length){ clearInterval(h); done&&done(); } }, ms); }
+function endShift(){
+  const sc = overallScore();
+  const kind = sc >= 400 ? 'gold' : sc < 100 ? 'shame' : null;
+  state.award = kind;
+  if(!kind || state.cerDone){ finalReport(); return; }
+  const A = AWARD[kind], st = $('cerStage');
+  st.className = 'cerstage' + (kind==='shame' ? ' shame' : '');
+  $('cerBanner').textContent = A.banner; $('cerTrophy').textContent = A.trophy; $('cerCrowd').textContent = A.crowd;
+  $('cerName').textContent = (state.player || 'Sahab').toUpperCase();
+  $('cerBy').textContent = pick(A.by);
+  $('cerSpeech').hidden = true; $('cerLine').textContent = '';
+  const go = $('cerGo'); go.disabled = true; go.textContent = 'Please wait…';
+  show('s-cer'); keepAwake();
+  setTimeout(()=>st.classList.add('lit'), 300);
+  typeLine($('cerLine'), pick(A.line), 38, ()=>{
+    drumroll();
+    setTimeout(()=>{
+      st.classList.add('open');
+      $('cerLine').textContent = `${(state.player||'Sahab')}! ${kind==='gold' ? 'With '+sc+' out of 500!' : 'With a mighty '+sc+' out of 500.'}`;
+      if(kind==='gold'){ fanfare(); applause(); buzzPhone([60,40,60,40,120]); } else { sadTrombone(); buzzPhone([300]); }
+      runFx(kind);
+      go.disabled = false; go.textContent = A.go;
+      go.onclick = () => {
+        $('cerSpeech').hidden = false; $('cerSpeech').textContent = `"${pick(A.speeches)}"`;
+        if(kind==='gold') applause(); else noiseBurst(.8, 300, .2);
+        go.textContent = 'See the day report';
+        go.onclick = () => { fxRun++; state.cerDone = true; finalReport(); };
+      };
+    }, 2000);
+  });
 }
 
 /* ---------- final ---------- */
@@ -1078,13 +1270,13 @@ function finalReport(){
   $('fBonus').textContent = bonus>0 ? `+${bonus} IoT alert bonus · ${state.total} Fresh points total` : `${certified} of ${OUTLETS.length} toilets certified`;
   $('fSum').textContent = `${v.length} of ${OUTLETS.length} toilets inspected · shift ended at ${fmt(Math.min(state.time, DAY))}. ` +
     (cover<1 ? `${OUTLETS.length-v.length} washroom${OUTLETS.length-v.length>1?'s':''} still waiting for you tomorrow.` : 'Every outlet on the route is fresh today.');
-  $('fTable').innerHTML = `<tr><th>Outlet</th><th>District</th><th class="n">Fixed</th><th class="n">Stars</th><th class="n">Points</th></tr>` +
+  $('fTable').innerHTML = `<tr><th>Outlet</th><th>State</th><th class="n">Fixed</th><th class="n">Stars</th><th class="n">Points</th></tr>` +
     OUTLETS.map(o=>{ const r=state.visited[o.id]; return `<tr><td>${o.name}</td><td>${o.town}</td><td class="n">${r?r.done+'/'+r.total:'–'}</td><td class="n">${r?'★'.repeat(r.stars)+'☆'.repeat(3-r.stars):'Not visited'}</td><td class="n">${r?r.score:0}</td></tr>`; }).join('');
   checkBadges();
   const eb = earnedBadges();
   $('fBadgeHead').textContent = `Badges · ${eb.length} of ${BADGES.length} unlocked`;
   $('fBadges').innerHTML = BADGES.map(b=>{ const on = eb.includes(b); return `<div class="bdg${on?'':' locked'}" title="${b.desc}"><span class="ic">${b.icon}</span><span class="bn">${b.name}</span><span class="bd">${b.desc}</span></div>`; }).join('');
-  const res = {overall, max, rank, line:RANK_LINES[rank], certified, total:state.total, name:state.player, badges:eb};
+  const res = {overall, max, rank, line:RANK_LINES[rank], certified, total:state.total, name:state.player, badges:eb, award:state.award};
   $('cardImg').hidden = true; $('cardNote').hidden = true; $('wa').disabled = true;
   show('s-final');
 
@@ -1142,11 +1334,18 @@ function openBoard(from){
 }
 $('boardBtn').onclick = () => openBoard('s-intro');
 $('howBtn').onclick = () => showTut();
+$('hMute').onclick = () => { $('mute').click(); $('hMute').textContent = muted ? '🔇' : '🔊'; };
+$('hFs').onclick = () => $('fs').click();
+function loadLeader(){
+  if(!boardOn()) return;
+  withTimeout(getBoard(), 8000).then(lb=>{ if(lb && lb.ok && lb.top && lb.top.length){ const t=lb.top[0]; $('leaderLine').textContent = `👑 Top Sahab: ${t.name} · ${t.score} pts · ${lb.players} player${lb.players>1?'s':''}`; $('leaderLine').hidden=false; } }).catch(()=>{});
+}
 $('lbRefresh').onclick = () => openBoard(boardFrom);
 $('lbBack').onclick = () => show(boardFrom);
 
 function buildShare(res, lb){
-  const rk = (lb && lb.rank ? `\nLeaderboard: #${lb.rank} of ${lb.players} players` : '') + (res.badges && res.badges.length ? `\nBadges: ${res.badges.map(b=>b.icon+' '+b.name).join(', ')}` : '');
+  const aw = res.award==='gold' ? '\n🏆 Won the DriveFresh Swachhata Award!' : res.award==='shame' ? '\n🪠 Received the Rusty Plunger of Shame.' : '';
+  const rk = aw + (lb && lb.rank ? `\nLeaderboard: #${lb.rank} of ${lb.players} players` : '') + (res.badges && res.badges.length ? `\nBadges: ${res.badges.map(b=>b.icon+' '+b.name).join(', ')}` : '');
   const msg = `🚽🧽 ${res.name} scored ${res.overall}/${res.max} in Toilet Cleaner Simulator (DriveFresh Edition)!\nRank: ${res.rank}${rk}\n${res.certified} of ${OUTLETS.length} toilets DriveFresh certified, ${res.total} Fresh points.\n"${res.line}"\nCan you beat me, Sahab? Be fresh, drive fresh! 🌸\n${GAME_URL}`;
   shareData = {msg, file:null};
   $('wa').disabled = false;
@@ -1177,7 +1376,7 @@ async function drawCard(d){
   x.restore();
   x.textAlign='center'; x.textBaseline='alphabetic';
   x.fillStyle='#ffd31a'; x.font='72px '+DISP; x.fillText('TOILET CLEANER',540,160); x.fillText('SIMULATOR',540,240);
-  x.fillStyle='#ffffff'; x.font='600 30px '+BODY; x.fillText('DriveFresh Edition  ·  Belgaum Retail Territory',540,284);
+  x.fillStyle='#ffffff'; x.font='600 30px '+BODY; x.fillText(d.award==='gold' ? '🏆  DriveFresh Swachhata Award winner' : d.award==='shame' ? '🪠  Rusty Plunger of Shame recipient' : 'DriveFresh Edition  ·  All-India Tour',540,284);
   x.fillStyle='#5b6f84'; x.font='800 32px '+BODY; x.fillText(('OVERALL SCORE  ·  '+(d.name||'')).toUpperCase().replace(/\s+·\s+$/,''),540,375,900);
   x.font='200px '+DISP; x.fillStyle='#ffd31a'; x.fillText(String(d.overall),548,568); x.fillStyle='#0a4fa3'; x.fillText(String(d.overall),540,560);
   x.fillStyle='#10263f'; x.font='800 40px '+BODY; x.fillText(`out of ${d.max}  ·  ${Math.round(d.overall/d.max*100)}% DriveFresh`,540,625);
@@ -1246,8 +1445,9 @@ $('start').onclick = () => {
 $('again').onclick = () => { $('pname').value = PLAYER; show('s-intro'); $('pname').focus(); };
 window.claude?.hot?.snapshot?.(() => ({state}));
 function boot(data){
-  if(data && data.state && data.state.started){ state = data.state; if(state.player) setPlayer(state.player); renderMap(); show('s-map'); }
+  if(data && data.state && data.state.started && data.state.out && OUTLETS.every(o=>data.state.out[o.id])){ state = data.state; if(state.player) setPlayer(state.player); renderMap(); show('s-map'); }
   else { hud(); show('s-intro'); }
+  loadLeader();
 }
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
 })();
