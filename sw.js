@@ -1,6 +1,6 @@
 /* Toilet Cleaner Simulator – service worker
    Bump VERSION whenever you upload a new index.html so players get the update. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'dfsim-' + VERSION;
 const SHELL = [
   './',
